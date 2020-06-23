@@ -139,7 +139,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>df</th>
-      <td><p>data frame with temperature data and columns "type" (i.e. "groundwater", "surface-water"), "date" and "value"</p></td>
+      <td><p>data frame with temperature data and columns "type" (i.e. "groundwater", "surface-water"), "date" (YYYY-MM-DD) and "value"</p></td>
     </tr>
     </table>
 
@@ -147,6 +147,10 @@
 
     <p>plot with interactive temperature data</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>path</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>kwb.heatsine</span><span class='kw ns'>::</span><span class='fu'><a href='extdata_file.html'>extdata_file</a></span>(<span class='st'>"temperature_groundwater_TEG343.csv"</span>)
+<span class='no'>gw_data</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>kwb.heatsine</span><span class='kw ns'>::</span><span class='fu'><a href='load_temperature_from_csv.html'>load_temperature_from_csv</a></span>(<span class='no'>path</span>)
+<span class='kw pkg'>kwb.heatsine</span><span class='kw ns'>::</span><span class='fu'>plot_temperature_interactive</span>(<span class='no'>gw_data</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

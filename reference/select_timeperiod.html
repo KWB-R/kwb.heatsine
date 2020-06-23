@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • kwb.heatsine</title>
+<title>Helper function: select timeperiod — select_timeperiod • kwb.heatsine</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,8 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Helper function: select timeperiod — select_timeperiod" />
+<meta property="og:description" content="Helper function: select timeperiod" />
 
 
 
@@ -58,7 +59,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -120,102 +121,71 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Helper function: select timeperiod</h1>
+    <small class="dont-index">Source: <a href='https://github.com/KWB-R/kwb.heatsine/blob/master/R/select_timeperiod.R'><code>R/select_timeperiod.R</code></a></small>
+    <div class="hidden name"><code>select_timeperiod.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>Helper function: select timeperiod</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>select_timeperiod</span>(
+  <span class='no'>df</span>,
+  <span class='no'>date_start</span>,
+  <span class='kw'>date_end</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span>(<span class='no'>date_start</span>) + <span class='fl'>365.25</span>,
+  <span class='kw'>col_date</span> <span class='kw'>=</span> <span class='st'>"date"</span>
+)</pre>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="extdata_file.html">extdata_file()</a></code> </p>
-        </td>
-        <td><p>Get Path to File in This Package</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="get_predictions.html">get_predictions()</a></code> </p>
-        </td>
-        <td><p>Get Predictions</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="get_tidy_traveltimes.html">get_tidy_traveltimes()</a></code> </p>
-        </td>
-        <td><p>Get tidy traveltimes</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="get_travel_time.html">get_travel_time()</a></code> </p>
-        </td>
-        <td><p>Helper function: get traveltime</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="load_temperature_from_csv.html">load_temperature_from_csv()</a></code> </p>
-        </td>
-        <td><p>Load Temperature Data From CSV</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="opt_func.html">opt_func()</a></code> </p>
-        </td>
-        <td><p>Optimise Sinus Fit Function</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="optimise_sinus_fixedPeriod.html">optimise_sinus_fixedPeriod()</a></code> </p>
-        </td>
-        <td><p>Optimise Sinus Fit for Fixed Period</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="optimise_sinus_variablePeriod.html">optimise_sinus_variablePeriod()</a></code> </p>
-        </td>
-        <td><p>Optimise Sinus Fit for Variable Period</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plot_prediction_interactive.html">plot_prediction_interactive()</a></code> </p>
-        </td>
-        <td><p>Plot Prediction Interactive</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plot_temperature_interactive.html">plot_temperature_interactive()</a></code> </p>
-        </td>
-        <td><p>Plot Temperature Interactive</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="select_timeperiod.html">select_timeperiod()</a></code> </p>
-        </td>
-        <td><p>Helper function: select timeperiod</p></td>
-      </tr>
-    </tbody>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>df</th>
+      <td><p>data frame with date (defined in parameter "col_date)</p></td>
+    </tr>
+    <tr>
+      <th>date_start</th>
+      <td><p>start date of selection</p></td>
+    </tr>
+    <tr>
+      <th>date_end</th>
+      <td><p>end date of selection. If no value is given 365.25 days after "date_start" will be used
+(default: as.Date(date_start) + 365.25)</p></td>
+    </tr>
+    <tr>
+      <th>col_date</th>
+      <td><p>column for dates (default: "date")</p></td>
+    </tr>
     </table>
-  </div>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>data frame with selected dates</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>path</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>kwb.heatsine</span><span class='kw ns'>::</span><span class='fu'><a href='extdata_file.html'>extdata_file</a></span>(<span class='st'>"temperature_groundwater_TEG343.csv"</span>)
+<span class='no'>gw_data</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>kwb.heatsine</span><span class='kw ns'>::</span><span class='fu'><a href='load_temperature_from_csv.html'>load_temperature_from_csv</a></span>(<span class='no'>path</span>)
+<span class='no'>gw_data_selected</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>kwb.heatsine</span><span class='kw ns'>::</span><span class='fu'>select_timeperiod</span>(<span class='no'>gw_data</span>,
+<span class='kw'>date_start</span> <span class='kw'>=</span> <span class='st'>"2015-12-28"</span>, <span class='kw'>date_end</span> <span class='kw'>=</span> <span class='st'>"2016-12-26"</span>)
+<span class='no'>gw_data_selected</span></div><div class='output co'>#&gt; # A tibble: 360 x 3
+#&gt;    type        date       value
+#&gt;    &lt;chr&gt;       &lt;date&gt;     &lt;dbl&gt;
+#&gt;  1 groundwater 2015-12-28  11.3
+#&gt;  2 groundwater 2015-12-29  11.2
+#&gt;  3 groundwater 2015-12-30  11.1
+#&gt;  4 groundwater 2015-12-31  11.1
+#&gt;  5 groundwater 2016-01-01  11  
+#&gt;  6 groundwater 2016-01-02  10.9
+#&gt;  7 groundwater 2016-01-03  10.8
+#&gt;  8 groundwater 2016-01-04  10.8
+#&gt;  9 groundwater 2016-01-05  10.7
+#&gt; 10 groundwater 2016-01-06  10.7
+#&gt; # … with 350 more rows</div><div class='input'>
+</div></pre>
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
