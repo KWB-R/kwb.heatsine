@@ -1,0 +1,28 @@
+Package: kwb.heatsine
+Title: R Package for Calculating Hydraulic Travel Times Based on
+    Sinus Temperature Fitting
+Version: 0.0.0.9000
+Authors@R: 
+    c(person(given = "Michael",
+             family = "Rustler",
+             role = c("aut", "cre"),
+             email = "michael.rustler@kompetenz-wasser.de",
+             comment = c(ORCID = "0000-0003-0647-7726")),
+      person(given = "Kompetenzzentrum Wasser Berlin gGmbH (KWB)",
+             role = "cph"))
+Description: Requires daily temperature times series in a
+    surface water body and one groundwater observation well (in case of an
+    production well this data needs to be cleaned in order to reduce
+    temperature fluctuations due to the operation scheme!).
+License: MIT + file LICENSE
+URL: https://github.com/KWB-R/kwb.heatsine
+BugReports: https://github.com/KWB-R/kwb.heatsine/issues
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.0
+Suggests: 
+    covr,
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
