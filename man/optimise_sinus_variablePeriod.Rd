@@ -15,7 +15,7 @@ optimise_sinus_variablePeriod(
 \arguments{
 \item{temp_df}{data frame with temperature data and columns "type" (i.e. "groundwater", "surface-water"), "date" and "value"}
 
-\item{optFunc}{optimisation function (default: \code{\link{optFunc}})}
+\item{optFunc}{optimisation function (default: \code{\link{opt_func}} )}
 
 \item{opt_limits}{optimisation limits for "period_length" (default: c(100,500))}
 

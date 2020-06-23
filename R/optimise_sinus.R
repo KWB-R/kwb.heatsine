@@ -147,7 +147,7 @@ opt_func <- function(period,
 #' Optimise Sinus Fit for Variable Period
 #'
 #' @param temp_df data frame with temperature data and columns "type" (i.e. "groundwater", "surface-water"), "date" and "value"
-#' @param optFunc optimisation function (default: \code{\link{optFunc}})
+#' @param optFunc optimisation function (default: \code{\link{opt_func}} )
 #' @param opt_limits optimisation limits for "period_length" (default: c(100,500))
 #' @param opt_tolerance (default: 0.001)
 #' @param opt_debug  show debug information (default: FALSE)
