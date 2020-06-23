@@ -15,10 +15,9 @@ mean_cl_quantile <- function(x, q = c(0.1, 0.9), na.rm = TRUE) {
   )
   return(dat)
 }
-
-#' Get tidy traveltime
+#' Get tidy traveltimes
 #'
-#' @param traveltimes traveltimes object as retrieved by get_predictions()
+#' @param traveltimes traveltimes object as retrieved by \code{\link{get_predictions}}
 #'
 #' @return data frame with tidy traveltimes
 #' @export
@@ -37,7 +36,7 @@ get_tidy_traveltimes <- function(traveltimes) {
 }
 
 
-#' Title
+#' Plot Prediction Interactive
 #'
 #' @param predictions as retrieved by get_predictions()
 #'

@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_prediction_interactive.R
 \name{plot_prediction_interactive}
 \alias{plot_prediction_interactive}
-\title{Title}
+\title{Plot Prediction Interactive}
 \usage{
 plot_prediction_interactive(predictions)
 }
@@ -13,5 +13,5 @@ plot_prediction_interactive(predictions)
 interactive prediction plot
 }
 \description{
-Title
+Plot Prediction Interactive
 }

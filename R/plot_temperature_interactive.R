@@ -1,7 +1,6 @@
 #' Plot Temperature Interactive
 #'
 #' @param df data frame with temperature data and columns "type" (i.e. "groundwater", "surface-water"), "date" and "value"
-#'
 #' @return plot with interactive temperature data
 #' @export
 #'

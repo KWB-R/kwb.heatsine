@@ -7,9 +7,9 @@
 get_travel_time(sinusfit_sw, sinusfit_gw, retardation_factor = 1.8)
 }
 \arguments{
-\item{sinusfit_sw}{as retrieved by optimise_sinus_variablePeriod(temp_df = temp_surfacewater)}
+\item{sinusfit_sw}{as retrieved by \code{\link{optimise_sinus_variablePeriod}} with surface water temperature data}
 
-\item{sinusfit_gw}{as retrieved by optimise_sinus_variablePeriod(temp_df = temp_groundwater)}
+\item{sinusfit_gw}{as retrieved by \code{\link{optimise_sinus_variablePeriod}} with groundwater temperature data}
 
 \item{retardation_factor}{hydraulic retardation factor (default: 2)}
 }

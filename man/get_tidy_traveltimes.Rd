@@ -2,16 +2,16 @@
 % Please edit documentation in R/plot_prediction_interactive.R
 \name{get_tidy_traveltimes}
 \alias{get_tidy_traveltimes}
-\title{Get tidy traveltime}
+\title{Get tidy traveltimes}
 \usage{
 get_tidy_traveltimes(traveltimes)
 }
 \arguments{
-\item{traveltimes}{traveltimes object as retrieved by get_predictions()}
+\item{traveltimes}{traveltimes object as retrieved by \code{\link{get_predictions}}}
 }
 \value{
 data frame with tidy traveltimes
 }
 \description{
-Get tidy traveltime
+Get tidy traveltimes
 }

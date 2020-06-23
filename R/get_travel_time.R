@@ -1,7 +1,7 @@
 #' Helper function: get traveltime
 #'
-#' @param sinusfit_sw as retrieved by optimise_sinus_variablePeriod(temp_df = temp_surfacewater)
-#' @param sinusfit_gw as retrieved by optimise_sinus_variablePeriod(temp_df = temp_groundwater)
+#' @param sinusfit_sw as retrieved by \code{\link{optimise_sinus_variablePeriod}} with surface water temperature data
+#' @param sinusfit_gw as retrieved by \code{\link{optimise_sinus_variablePeriod}} with groundwater temperature data
 #' @param retardation_factor hydraulic retardation factor (default: 2)
 #'
 #' @return data frame with travel times for min/max and turning points
