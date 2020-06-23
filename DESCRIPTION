@@ -17,12 +17,25 @@ Description: Requires daily temperature times series in a
 License: MIT + file LICENSE
 URL: https://github.com/KWB-R/kwb.heatsine
 BugReports: https://github.com/KWB-R/kwb.heatsine/issues
-Encoding: UTF-8
-LazyData: true
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.0
+Imports: 
+    dplyr,
+    forcats,
+    ggplot2,
+    hydroGOF,
+    janitor,
+    lubridate,
+    plotly,
+    rlang,
+    tibble,
+    tidyr,
+    magrittr
 Suggests: 
     covr,
     knitr,
     rmarkdown
-VignetteBuilder: knitr
+VignetteBuilder: 
+    knitr
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.0
