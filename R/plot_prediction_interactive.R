@@ -67,6 +67,7 @@ plot_prediction_interactive <- function(predictions) {
     ))
 
   g1 <- predictions$data %>%
+    dplyr::select(- .data$day_number) %>%
     tidyr::gather(
       key = "temperature", value = "value",
       -.data$type,
