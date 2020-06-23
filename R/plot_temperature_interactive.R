@@ -1,8 +1,12 @@
 #' Plot Temperature Interactive
 #'
-#' @param df data frame with temperature data and columns "type" (i.e. "groundwater", "surface-water"), "date" and "value"
+#' @param df data frame with temperature data and columns "type" (i.e. "groundwater", "surface-water"), "date" (YYYY-MM-DD) and "value"
 #' @return plot with interactive temperature data
 #' @export
+#' @examples
+#' path <- kwb.heatsine::extdata_file("temperature_groundwater_TEG343.csv")
+#' gw_data <- kwb.heatsine::load_temperature_from_csv(path)
+#' kwb.heatsine::plot_temperature_interactive(gw_data)
 #'
 plot_temperature_interactive <- function(df) {
   df <- tibble::as_tibble(df)

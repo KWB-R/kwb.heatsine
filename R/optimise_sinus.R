@@ -1,6 +1,6 @@
 #' Optimise Sinus Fit for Fixed Period
 #'
-#' @param df data frame with temperature data and columns "type" (i.e. "groundwater", "surface-water"), "date" and "value"
+#' @param df data frame with temperature data and columns "type" (i.e. "groundwater", "surface-water"), "date" (YYYY-MM-DD) and "value"
 #' @param period_length period length (default: 365.25)
 #' @return list with fit parameters ("paras"), goodness-of-fit values ("gof"), special points, i.e. min/max/turning-points
 #' ("points), fit model ("lm_model") and input data ("data")
@@ -65,7 +65,7 @@ optimise_sinus_fixedPeriod <- function(df,
     type = df$type[1],
     date = c(date_max, date_min),
     day_number = as.integer(df$day_number[1] + date - df$date[1]),
-    simulated = predict(fit.lm2, newdata = tibble::tibble(day_number = .data$day_number)),
+    simulated = predict(fit.lm2, newdata = tibble::tibble(day_number = day_number)),
     point_type = c("max", "min")
   ) %>%
     dplyr::left_join(tibble::as_tibble(df[, c("day_number", "value")]), by = "day_number") %>%
@@ -90,7 +90,7 @@ optimise_sinus_fixedPeriod <- function(df,
     ) %>%
       as.Date(),
     day_number = as.integer(df$day_number[1] + .data$date - df$date[1]),
-    simulated = predict(fit.lm2, newdata = tibble::tibble(day_number = .data$day_number))
+    simulated = predict(fit.lm2, newdata = tibble::tibble(day_number = day_number))
   ) %>%
     dplyr::left_join(tibble::as_tibble(df[, c("day_number", "value")]), by = "day_number") %>%
     dplyr::rename(observed = .data$value) %>%
@@ -119,7 +119,7 @@ optimise_sinus_fixedPeriod <- function(df,
 #' Optimise Sinus Fit Function
 #'
 #' @param period period length
-#' @param df data frame with temperature data and columns "type" (i.e. "groundwater", "surface-water"), "date" and "value"
+#' @param df data frame with temperature data and columns "type" (i.e. "groundwater", "surface-water"), "date" (YYYY-MM-DD) and "value"
 #' @param opt_criteria (default: "rmse"), for other options check: ?hydroGOF::gof
 #' @param debug show debug messages (default: TRUE)
 #' @return scalar with optimisation result
@@ -146,7 +146,7 @@ opt_func <- function(period,
 
 #' Optimise Sinus Fit for Variable Period
 #'
-#' @param temp_df data frame with temperature data and columns "type" (i.e. "groundwater", "surface-water"), "date" and "value"
+#' @param temp_df data frame with temperature data and columns "type" (i.e. "groundwater", "surface-water"), "date" (YYYY-MM-DD) and "value"
 #' @param optFunc optimisation function (default: \code{\link{opt_func}} )
 #' @param opt_limits optimisation limits for "period_length" (default: c(100,500))
 #' @param opt_tolerance (default: 0.001)
@@ -155,6 +155,7 @@ opt_func <- function(period,
 #' ("points), fit model ("lm_model") and input data ("data")
 #' @references  https://stats.stackexchange.com/questions/77543/how-do-i-get-the-amplitude-and-phase-for-sine-wave-from-lm-summary
 #' @importFrom stats optimise
+#' @export
 #'
 optimise_sinus_variablePeriod <- function(
                                           temp_df,

@@ -9,7 +9,7 @@ opt_func(period, df, opt_criteria = "rmse", debug = TRUE)
 \arguments{
 \item{period}{period length}
 
-\item{df}{data frame with temperature data and columns "type" (i.e. "groundwater", "surface-water"), "date" and "value"}
+\item{df}{data frame with temperature data and columns "type" (i.e. "groundwater", "surface-water"), "date" (YYYY-MM-DD) and "value"}
 
 \item{opt_criteria}{(default: "rmse"), for other options check: ?hydroGOF::gof}
 

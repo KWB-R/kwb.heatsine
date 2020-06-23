@@ -7,11 +7,17 @@
 plot_temperature_interactive(df)
 }
 \arguments{
-\item{df}{data frame with temperature data and columns "type" (i.e. "groundwater", "surface-water"), "date" and "value"}
+\item{df}{data frame with temperature data and columns "type" (i.e. "groundwater", "surface-water"), "date" (YYYY-MM-DD) and "value"}
 }
 \value{
 plot with interactive temperature data
 }
 \description{
 Plot Temperature Interactive
+}
+\examples{
+path <- kwb.heatsine::extdata_file("temperature_groundwater_TEG343.csv")
+gw_data <- kwb.heatsine::load_temperature_from_csv(path)
+kwb.heatsine::plot_temperature_interactive(gw_data)
+
 }

@@ -13,9 +13,9 @@
 # kwb.utils::sourceScripts(
 #   dir("functions_temperature-fitting", full.names = TRUE)
 # )
-kwb.utils::sourceScripts(
-  dir("R", pattern = "^\\.", recursive = TRUE, full.names = TRUE)
-)
+# kwb.utils::sourceScripts(
+#   dir("R", pattern = "^\\.", recursive = TRUE, full.names = TRUE)
+# )
 # MAIN -------------------------------------------------------------------------
 if (FALSE)
 {
@@ -48,11 +48,13 @@ if (FALSE)
   ####################################################################
   ### 2. Interactively plot & select data
 
+  path_csv_sw <- kwb.heatsine::extdata_file("temperature_surface-water_TEGsee-mikrosieb.csv")
+  path_csv_gw <- kwb.heatsine::extdata_file("temperature_groundwater_TEG343.csv")
+
   ### Interactively select time period
-  data_sw <- readr::read_csv(file = "csv/temperature_surface-water.csv",
-                             col_types = "cDd")
-  data_gw <- readr::read_csv(file = "csv/temperature_groundwater.csv",
-                             col_types = "cDd")
+  data_sw <- kwb.heatsine::load_temperature_from_csv(path_csv_sw)
+
+  data_gw <- kwb.heatsine::load_temperature_from_csv(path_csv_gw)
 
   # 2.1 Surface water
 
@@ -62,16 +64,16 @@ if (FALSE)
   ## 2.1.2 Reduce time period to user input ('date_end' is optional, if not given
   ##       it is set to 'date_start' + 365.25 days)
 
-  data_sw_selected <- select_timeperiod(data_sw,
+  data_sw_selected <- kwb.heatsine::select_timeperiod(data_sw,
                                         date_start = "2015-10-10",
                                         date_end = "2016-10-14")
 
-  plot_temperature_interactive(df = data_sw_selected)
+  kwb.heatsine::plot_temperature_interactive(df = data_sw_selected)
 
 
-  plot_temperature_interactive(data_gw)
+  kwb.heatsine::plot_temperature_interactive(data_gw)
 
-  data_gw_selected <- select_timeperiod(data_gw,
+  data_gw_selected <- kwb.heatsine::select_timeperiod(data_gw,
                                         date_start = "2015-12-28",
                                         date_end = "2016-12-26")
 
@@ -83,7 +85,7 @@ if (FALSE)
   limits <- c(100,500) # minimum/maximum period length
   tolerance <- 0.001 # the desired accuracy ()
   debug <- TRUE
-  sinusfit_sw <- optimise_sinus_variablePeriod(temp_df = data_sw_selected,
+  sinusfit_sw <- kwb.heatsine::optimise_sinus_variablePeriod(temp_df = data_sw_selected,
                                                opt_limits = limits,
                                                opt_tolerance = tolerance,
                                                opt_debug = debug)
@@ -109,7 +111,7 @@ if (FALSE)
   # }
   #
 
-  sinusfit_gw <- optimise_sinus_variablePeriod(temp_df = data_gw_selected,
+  sinusfit_gw <- kwb.heatsine::optimise_sinus_variablePeriod(temp_df = data_gw_selected,
                                                opt_limits = limits,
                                                opt_tolerance = tolerance,
                                                opt_debug = debug)
@@ -119,19 +121,15 @@ if (FALSE)
   ### 4. Results
 
   # Generate data frame with simulated and observed values
-  predictions <- get_predictions(sinusfit_sw,
-                                 sinusfit_gw,
-                                 data_sw_selected,
-                                 data_gw_selected,
-                                 retardation_factor = 1.8)
+  predictions <- kwb.heatsine::get_predictions(sinusfit_sw, sinusfit_gw, retardation_factor = 1.8)
 
 
   # Plot results interactively
-  plot_prediction_interactive(predictions)
+  kwb.heatsine::plot_prediction_interactive(predictions)
 
   # Plot residuals interactively (either use binwidth = NULL -> auto-defined or
   # select your own value)
-  plot_residuals_interactive(prediction_df, binwidth = 0.2)
+  #plot_residuals_interactive(prediction_df, binwidth = 0.2)
 
 
 
@@ -140,15 +138,15 @@ if (FALSE)
   ### 5. Export results
 
   kwb.utils::createDirectory("csv")
-  readr::write_csv(prediction_df,
+  readr::write_csv(predictions$data,
                    path = "csv/sinus-fit_predictions.csv")
-  readr::write_csv(res_opti_paras,
+  readr::write_csv(predictions$paras,
                    path = "csv/sinus-fit_parameters.csv")
-  readr::write_csv(res_opti_gof,
+  readr::write_csv(predictions$gof,
                    path = "csv/sinus-fit_goodness-of-fit.csv")
-  readr::write_csv(res_opti_traveltimes,
+  readr::write_csv(predictions$traveltimes,
                    path = "csv/sinus-fit_traveltimes.csv")
-  readr::write_csv(data.frame(residuals = prediction_df$simulated-prediction_df$observed),
+  readr::write_csv(data.frame(residuals = predictions$data$simulated-predictions$data$observed),
                    "csv/sinus-fit_residuals.csv")
 
 
@@ -166,11 +164,11 @@ if (FALSE)
     plot_temperature_interactive(df = data_gw_selected) %>%
       htmlwidgets::saveWidget("temperature_groundwater_time-series_selected.html")
 
-    plot_prediction_interactive(prediction_df) %>%
+    plot_prediction_interactive(predictions) %>%
       htmlwidgets::saveWidget("temperature_prediction.html")
 
-    plot_residuals_interactive(prediction_df, binwidth = 0.5) %>%
-      htmlwidgets::saveWidget("temperature_prediction_residuals.html")
+    # plot_residuals_interactive(prediction_df, binwidth = 0.5) %>%
+    #   htmlwidgets::saveWidget("temperature_prediction_residuals.html")
   }
   )
 

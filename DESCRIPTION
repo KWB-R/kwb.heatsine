@@ -23,16 +23,22 @@ Imports:
     ggplot2,
     hydroGOF,
     janitor,
+    kwb.utils,
     lubridate,
     plotly,
+    readr,
     rlang,
     tibble,
     tidyr,
     magrittr
 Suggests: 
     covr,
+    htmlwidgets,
     knitr,
-    rmarkdown
+    rmarkdown,
+    withr
+Remotes: 
+    github::kwb-r/kwb.utils
 VignetteBuilder: 
     knitr
 Encoding: UTF-8

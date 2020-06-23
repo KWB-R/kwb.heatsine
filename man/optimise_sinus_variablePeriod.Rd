@@ -13,7 +13,7 @@ optimise_sinus_variablePeriod(
 )
 }
 \arguments{
-\item{temp_df}{data frame with temperature data and columns "type" (i.e. "groundwater", "surface-water"), "date" and "value"}
+\item{temp_df}{data frame with temperature data and columns "type" (i.e. "groundwater", "surface-water"), "date" (YYYY-MM-DD) and "value"}
 
 \item{optFunc}{optimisation function (default: \code{\link{opt_func}} )}
 
