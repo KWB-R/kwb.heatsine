@@ -107,6 +107,9 @@ optimise_sinus_fixedPeriod <- function(df,
   points <- dplyr::bind_rows(turning_points, extrema) %>%
     dplyr::arrange(.data$date)
 
+
+  df <- df %>% dplyr::select(- .data$day_number)
+
   list(
     paras = paras,
     gof = gof,
