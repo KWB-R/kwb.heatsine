@@ -83,10 +83,10 @@ kwb.heatsine::plot_temperature_interactive(df = data_gw_selected)
 ```
 
 
-# Sinus optimisation for surface water and groundwater:
+# Sinus optimisation 
 
 
-## Perform optimisation 
+## Run
 
 ```{r}
 
@@ -108,7 +108,7 @@ sinusfit_gw <- kwb.heatsine::optimise_sinus_variablePeriod(temp_df = data_gw_sel
 predictions <- kwb.heatsine::get_predictions(sinusfit_sw, sinusfit_gw, retardation_factor = 1.8)
 ```
 
-## Results 
+## Analyse
 
 ### Interactive Plot
 

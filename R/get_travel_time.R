@@ -15,7 +15,7 @@ get_travel_time <- function(sinusfit_sw, sinusfit_gw, retardation_factor = 1.8) 
     dplyr::select(-.data$day_number) %>%
     dplyr::bind_rows(sinusfit_gw$points %>% dplyr::select(-.data$day_number)) %>%
     dplyr::select(-.data$observed, -.data$simulated) %>%
-    tidyr::spread(key = "type", value = "date") %>%
+    tidyr::spread(key = "label", value = "date") %>%
     dplyr::mutate(
       traveltime_thermal_days = as.numeric(.data$groundwater - .data$`surface-water`),
       retardation_factor = retardation_factor,

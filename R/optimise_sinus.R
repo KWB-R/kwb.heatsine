@@ -1,6 +1,6 @@
 #' Optimise Sinus Fit for Fixed Period
 #'
-#' @param df data frame with temperature data and columns "type" (i.e. "groundwater", "surface-water"), "date" (YYYY-MM-DD) and "value"
+#' @param df data frame with temperature data and columns "date" (YYYY-MM-DD) and "value"
 #' @param period_length period length (default: 365.25)
 #' @return list with fit parameters ("paras"), goodness-of-fit values ("gof"), special points, i.e. min/max/turning-points
 #' ("points), fit model ("lm_model") and input data ("data")
@@ -14,10 +14,20 @@
 #' @importFrom hydroGOF gof
 optimise_sinus_fixedPeriod <- function(df,
                                        period_length = 365.25) {
-  df <- df[order(df$date), ]
+
+  metadata <- attributes(df)
+
+  df <-tibble::tibble(type = metadata$type,
+                      monitoring_id = metadata$monitoring_id,
+                      label = metadata$label) %>%
+    dplyr::bind_cols(df) %>%
+    dplyr::arrange(.data$date)
+
 
   dates_all <- tibble::tibble(
-    type = df$type[1],
+    type = metadata$type,
+    monitoring_id = metadata$monitoring_id,
+    label = metadata$label,
     date = seq(lubridate::ymd(min(df$date, na.rm = TRUE)),
       lubridate::ymd(max(df$date, na.rm = TRUE)),
       by = "days"
@@ -25,7 +35,7 @@ optimise_sinus_fixedPeriod <- function(df,
   )
 
   df <- df %>%
-    dplyr::right_join(dates_all, by = c("type", "date")) %>%
+    dplyr::right_join(dates_all, by = c("type", "monitoring_id", "label", "date")) %>%
     dplyr::arrange(.data$date)
 
   df$day_number <- as.numeric(df$date - df$date[1])
@@ -62,7 +72,7 @@ optimise_sinus_fixedPeriod <- function(df,
 
 
   extrema <- tibble::tibble(
-    type = df$type[1],
+    label = metadata$label,
     date = c(date_max, date_min),
     day_number = as.integer(df$day_number[1] + date - df$date[1]),
     simulated = predict(fit.lm2, newdata = tibble::tibble(day_number = day_number)),
@@ -71,7 +81,7 @@ optimise_sinus_fixedPeriod <- function(df,
     dplyr::left_join(tibble::as_tibble(df[, c("day_number", "value")]), by = "day_number") %>%
     dplyr::rename(observed = .data$value) %>%
     dplyr::select(
-      .data$type,
+      .data$label,
       .data$day_number,
       .data$date,
       .data$observed,
@@ -82,7 +92,7 @@ optimise_sinus_fixedPeriod <- function(df,
   quarter_period <- period_length / 4
 
   turning_points <- tibble::tibble(
-    type = df$type[1],
+    label = metadata$label,
     point_type = sprintf("turning-point_%d", 1:3),
     date = dplyr::case_when(
       date_max > date_min ~ c(date_min - quarter_period, date_min + quarter_period, date_max + quarter_period),
@@ -95,7 +105,7 @@ optimise_sinus_fixedPeriod <- function(df,
     dplyr::left_join(tibble::as_tibble(df[, c("day_number", "value")]), by = "day_number") %>%
     dplyr::rename(observed = .data$value) %>%
     dplyr::select(
-      .data$type,
+      .data$label,
       .data$day_number,
       .data$date,
       .data$observed,
@@ -115,14 +125,15 @@ optimise_sinus_fixedPeriod <- function(df,
     gof = gof,
     points = points,
     lm_object = fit.lm2,
-    data = df
+    data = df,
+    metadata = metadata
   )
 }
 
 #' Optimise Sinus Fit Function
 #'
 #' @param period period length
-#' @param df data frame with temperature data and columns "type" (i.e. "groundwater", "surface-water"), "date" (YYYY-MM-DD) and "value"
+#' @param df data frame with temperature data and columns "date" (YYYY-MM-DD) and "value"
 #' @param opt_criteria (default: "rmse"), for other options check: ?hydroGOF::gof
 #' @param debug show debug messages (default: TRUE)
 #' @return scalar with optimisation result
@@ -149,7 +160,7 @@ opt_func <- function(period,
 
 #' Optimise Sinus Fit for Variable Period
 #'
-#' @param temp_df data frame with temperature data and columns "type" (i.e. "groundwater", "surface-water"), "date" (YYYY-MM-DD) and "value"
+#' @param temp_df data frame with temperature data and columns "date" (YYYY-MM-DD) and "value"
 #' @param optFunc optimisation function (default: \code{\link{opt_func}} )
 #' @param opt_limits optimisation limits for "period_length" (default: c(100,500))
 #' @param opt_tolerance (default: 0.001)

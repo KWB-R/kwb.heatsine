@@ -67,9 +67,10 @@ plot_prediction_interactive <- function(predictions) {
     ))
 
   g1 <- predictions$data %>%
+    dplyr::select(-.data$type, -.data$monitoring_id) %>%
     tidyr::gather(
       key = "temperature", value = "value",
-      -.data$type,
+      -.data$label,
       -.data$date,
       -.data$simulated_pi_lower,
       -.data$simulated_pi_upper
@@ -83,7 +84,7 @@ plot_prediction_interactive <- function(predictions) {
       )
     ) %>%
     ggplot2::ggplot(ggplot2::aes_string(x = "date", y = "value", col = "temperature")) +
-    ggplot2::facet_wrap(~ forcats::fct_rev(type), ncol = 1) +
+    ggplot2::facet_wrap(~ forcats::fct_rev(.data$label), ncol = 1) +
     ggplot2::geom_line() +
     ggplot2::geom_vline(
       data = traveltimes_tidy, mapping = ggplot2::aes(

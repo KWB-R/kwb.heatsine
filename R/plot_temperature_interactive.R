@@ -1,6 +1,6 @@
 #' Plot Temperature Interactive
 #'
-#' @param df data frame with temperature data and columns "type" (i.e. "groundwater", "surface-water"), "date" (YYYY-MM-DD) and "value"
+#' @param df data frame with temperature data and columns "date" (YYYY-MM-DD) and "value"
 #' @return plot with interactive temperature data
 #' @export
 #' @examples
@@ -24,6 +24,7 @@ plot_temperature_interactive <- function(df) {
       lty = 2, colour = "grey"
     ) +
     ggplot2::scale_x_date(date_labels = "%Y/%m/%d") +
+    ggplot2::labs(title = attr(df, "label"), y = "temperature (\u00B0 C)") +
     ggplot2::theme_bw()
 
   plotly::ggplotly(g)

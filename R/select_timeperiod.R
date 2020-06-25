@@ -21,7 +21,10 @@ select_timeperiod <- function(df,
                               col_date = "date") {
   date <- dplyr::pull(df, col_date)
 
+ # metadata <- attributes(df)[5:8]
+
   condition <- date >= date_start & date <= date_end
 
   df[condition, ]
+
 }

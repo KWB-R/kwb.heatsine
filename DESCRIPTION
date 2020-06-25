@@ -25,12 +25,12 @@ Imports:
     janitor,
     kwb.utils,
     lubridate,
+    magrittr,
     plotly,
     readr,
     rlang,
     tibble,
-    tidyr,
-    magrittr
+    tidyr
 Suggests: 
     covr,
     htmlwidgets,
