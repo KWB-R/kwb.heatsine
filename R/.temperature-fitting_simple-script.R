@@ -133,14 +133,20 @@ if (FALSE)
   ### 5. Export results
 
   kwb.utils::createDirectory("csv")
-  readr::write_csv(predictions$data, path = "csv/sinus-fit_predictions.csv")
-  readr::write_csv(predictions$paras, path = "csv/sinus-fit_parameters.csv")
-  readr::write_csv(predictions$gof, path = "csv/sinus-fit_goodness-of-fit.csv")
-  readr::write_csv(predictions$traveltimes, path = "csv/sinus-fit_traveltimes.csv")
-  readr::write_csv(
-    data.frame(residuals = predictions$data$simulated-predictions$data$observed),
-    "csv/sinus-fit_residuals.csv"
+
+  write_to_csv <- function(df, file_base) readr::write_csv(
+    df, path = file.path("csv", paste0(file_base, ".csv"))
   )
+
+  get_residuals <- function(df) data.frame(
+    residuals = df$simulated - df$observed
+  )
+
+  write_to_csv(predictions$data, "sinus-fit_predictions")
+  write_to_csv(predictions$paras, "sinus-fit_parameters")
+  write_to_csv(predictions$gof, "sinus-fit_goodness-of-fit")
+  write_to_csv(predictions$traveltimes, "sinus-fit_traveltimes")
+  write_to_csv(get_residuals(df = predictions$data), "sinus-fit_residuals")
 
   ## Export plots:
   kwb.utils::createDirectory("plots")
