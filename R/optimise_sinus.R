@@ -18,7 +18,7 @@ optimise_sinus_fixedPeriod <- function(df, period_length = 365.25)
 {
   metadata <- attributes(df)
 
-  df <-tibble::tibble(
+  df <- tibble::tibble(
     type = metadata$type,
     monitoring_id = metadata$monitoring_id,
     label = metadata$label
@@ -26,15 +26,17 @@ optimise_sinus_fixedPeriod <- function(df, period_length = 365.25)
     dplyr::bind_cols(df) %>%
     dplyr::arrange(.data$date)
 
+  day_seq_from_range <- function(rng) seq(
+    lubridate::ymd(rng[1L]),
+    lubridate::ymd(rng[2L]),
+    by = "days"
+  )
+
   dates_all <- tibble::tibble(
     type = metadata$type,
     monitoring_id = metadata$monitoring_id,
     label = metadata$label,
-    date = seq(
-      lubridate::ymd(min(df$date, na.rm = TRUE)),
-      lubridate::ymd(max(df$date, na.rm = TRUE)),
-      by = "days"
-    )
+    date = day_seq_from_range(rng = range(df$date, na.rm = TRUE))
   )
 
   df <- df %>%
