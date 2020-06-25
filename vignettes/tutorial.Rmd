@@ -48,7 +48,8 @@ temperature_`<type>`_`<monitoring_id>`.csv
 where `<type>` needs to be exactly `groundwater` or `surface-water`. In case any 
 other value for `<type>` is chosen the program will not work (e.g `SURFACE WATER`). 
 The value of the `<monitoring_id>` will be used for labeling the monitoring points
-in the plots and can be value but must not contain `_` (underscore) or `" "` (space).
+in the plots and can be almost any value but must not contain `_` (underscore) 
+or `" "` (space).
 
 # Data structure  
 
