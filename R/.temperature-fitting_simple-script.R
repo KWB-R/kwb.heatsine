@@ -151,21 +151,41 @@ if (FALSE)
   ## Export plots:
   kwb.utils::createDirectory("plots")
 
-  plot_to_html <- function(df, file_base) {
-    plot_temperature_interactive(df) %>%
-      htmlwidgets::saveWidget(paste0(file_base, ".html"))
+  plot_to_html <- function(p, file_base) {
+    htmlwidgets::saveWidget(p, paste0(file_base, ".html"))
   }
 
   withr::with_dir(new = "plots", code = {
 
-    plot_to_html(data_sw, "temperature_surface-water_time-series_full")
-    plot_to_html(data_sw_selected, "temperature_surface-water_time-series_selected")
-    plot_to_html(data_gw, "temperature_groundwater_time-series_full")
-    plot_to_html(data_gw_selected, "temperature_groundwater_time-series_selected")
-    plot_to_html(predictions, "temperature_prediction")
+    plot_to_html(
+      plot_temperature_interactive(data_sw),
+      "temperature_surface-water_time-series_full"
+    )
 
-    # plot_residuals_interactive(prediction_df, binwidth = 0.5) %>%
-    #   htmlwidgets::saveWidget("temperature_prediction_residuals.html")
+    plot_to_html(
+      plot_temperature_interactive(data_sw_selected),
+      "temperature_surface-water_time-series_selected"
+    )
+
+    plot_to_html(
+      plot_temperature_interactive(data_gw),
+      "temperature_groundwater_time-series_full"
+    )
+
+    plot_to_html(
+      plot_temperature_interactive(data_gw_selected),
+      "temperature_groundwater_time-series_selected"
+    )
+
+    plot_to_html(
+      plot_prediction_interactive(predictions),
+      "temperature_prediction"
+    )
+
+    # plot_to_html(
+    #   plot_residuals_interactive(prediction_df, binwidth = 0.5),
+    #   "temperature_prediction_residuals"
+    # )
   })
 }
 
