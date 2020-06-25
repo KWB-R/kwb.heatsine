@@ -18,10 +18,7 @@ plot_temperature_interactive <- function(df)
     value_range[2L] # maximum
   )
 
-  g <- ggplot2::ggplot(
-    data = tibble::as_tibble(df),
-    ggplot2::aes_string(x = "date", y = "value")
-  ) +
+  g <- ggplot2::ggplot(df, ggplot2::aes_string(x = "date", y = "value")) +
     ggplot2::geom_point() +
     ggplot2::geom_hline(yintercept = yintercept, lty = 2, colour = "grey") +
     ggplot2::scale_x_date(date_labels = "%Y/%m/%d") +
