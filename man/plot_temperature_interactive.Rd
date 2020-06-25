@@ -7,7 +7,7 @@
 plot_temperature_interactive(df)
 }
 \arguments{
-\item{df}{data frame with temperature data and columns "type" (i.e. "groundwater", "surface-water"), "date" (YYYY-MM-DD) and "value"}
+\item{df}{data frame with temperature data and columns "date" (YYYY-MM-DD) and "value"}
 }
 \value{
 plot with interactive temperature data
