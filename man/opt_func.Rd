@@ -4,14 +4,14 @@
 \alias{opt_func}
 \title{Optimise Sinus Fit Function}
 \usage{
-opt_func(period, df, opt_criteria = "rmse", debug = TRUE)
+opt_func(period, df, opt_criteria = "RMSE", debug = TRUE)
 }
 \arguments{
 \item{period}{period length}
 
 \item{df}{data frame with temperature data and columns "date" (YYYY-MM-DD) and "value"}
 
-\item{opt_criteria}{(default: "rmse"), for other options check: ?hydroGOF::gof}
+\item{opt_criteria}{(default: "RMSE"), for other options check: ?hydroGOF::gof}
 
 \item{debug}{show debug messages (default: TRUE)}
 }

@@ -6,7 +6,6 @@
 #' ("points), fit model ("lm_model") and input data ("data")
 #' @references  https://stats.stackexchange.com/questions/77543/how-do-i-get-the-amplitude-and-phase-for-sine-wave-from-lm-summary
 #' @export
-#' @importFrom janitor clean_names
 #' @importFrom tibble as_tibble tibble
 #' @importFrom lubridate ymd
 #' @importFrom dplyr rename select mutate case_when bind_rows left_join right_join arrange
@@ -48,8 +47,7 @@ optimise_sinus_fixedPeriod <- function(df,
   gof <- tibble::as_tibble(t(hydroGOF::gof(
     sim = fit.lm2$fitted.values,
     obs = fit.lm2$model$value
-  ))) %>%
-    janitor::clean_names()
+  )))
 
 
 
@@ -134,7 +132,7 @@ optimise_sinus_fixedPeriod <- function(df,
 #'
 #' @param period period length
 #' @param df data frame with temperature data and columns "date" (YYYY-MM-DD) and "value"
-#' @param opt_criteria (default: "rmse"), for other options check: ?hydroGOF::gof
+#' @param opt_criteria (default: "RMSE"), for other options check: ?hydroGOF::gof
 #' @param debug show debug messages (default: TRUE)
 #' @return scalar with optimisation result
 #' @export
@@ -142,7 +140,7 @@ optimise_sinus_fixedPeriod <- function(df,
 #'
 opt_func <- function(period,
                      df,
-                     opt_criteria = "rmse",
+                     opt_criteria = "RMSE",
                      debug = TRUE) {
   f1 <- optimise_sinus_fixedPeriod(df, period_length = period)
 

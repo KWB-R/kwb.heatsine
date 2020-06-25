@@ -22,7 +22,6 @@ Imports:
     forcats,
     ggplot2,
     hydroGOF,
-    janitor,
     kwb.utils,
     lubridate,
     magrittr,
