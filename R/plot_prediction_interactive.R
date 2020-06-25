@@ -20,7 +20,8 @@ mean_cl_quantile <- function(x, q = c(0.1, 0.9), na.rm = TRUE)
 
 #' Get tidy traveltimes
 #'
-#' @param traveltimes traveltimes object as retrieved by \code{\link{get_predictions}}
+#' @param traveltimes traveltimes object as retrieved by
+#'   \code{\link{get_predictions}}
 #'
 #' @return data frame with tidy traveltimes
 #' @export
@@ -38,7 +39,6 @@ get_tidy_traveltimes <- function(traveltimes) {
   )
 }
 
-
 #' Plot Prediction Interactive
 #'
 #' @param predictions as retrieved by get_predictions()
@@ -51,7 +51,8 @@ get_tidy_traveltimes <- function(traveltimes) {
 #' @import ggplot2
 #' @importFrom plotly ggplotly
 #'
-plot_prediction_interactive <- function(predictions) {
+plot_prediction_interactive <- function(predictions)
+{
   traveltimes_tidy <- get_tidy_traveltimes(predictions$traveltimes) %>%
     dplyr::mutate(label = dplyr::if_else(
       .data$type == "groundwater",
@@ -86,7 +87,9 @@ plot_prediction_interactive <- function(predictions) {
         NA_real_, .data$simulated_pi_upper
       )
     ) %>%
-    ggplot2::ggplot(ggplot2::aes_string(x = "date", y = "value", col = "temperature")) +
+    ggplot2::ggplot(ggplot2::aes_string(
+      x = "date", y = "value", col = "temperature"
+    )) +
     ggplot2::facet_wrap(~ forcats::fct_rev(.data$label), ncol = 1) +
     ggplot2::geom_line() +
     ggplot2::geom_vline(
@@ -97,24 +100,28 @@ plot_prediction_interactive <- function(predictions) {
       alpha = 0.5,
       show.legend = FALSE
     ) +
-    # ggplot2::geom_text(data=traveltimes_tidy, mapping= ggplot2::aes(x=.data$date,
-    #                                                                 y=0,
-    #                                                                 label=.data$label),
-    #                    size=4,
-    #                    angle=90,
-    #                    vjust=-0.4,
-    #                    hjust=0) +
-    ggplot2::geom_ribbon(ggplot2::aes_string(
-      ymin = "simulated_pi_lower",
-      ymax = "simulated_pi_upper"
-    ),
-    linetype = 2,
-    alpha = 0.1,
-    show.legend = TRUE
+    # ggplot2::geom_text(
+    #   data = traveltimes_tidy,
+    #   mapping = ggplot2::aes(x = .data$date, y = 0, label = .data$label),
+    #   size = 4,
+    #   angle = 90,
+    #   vjust = -0.4,
+    #   hjust = 0
+    # ) +
+    ggplot2::geom_ribbon(
+      ggplot2::aes_string(
+        ymin = "simulated_pi_lower",
+        ymax = "simulated_pi_upper"
+      ),
+      linetype = 2,
+      alpha = 0.1,
+      show.legend = TRUE
     ) +
     ggplot2::ylab(label = "temperature (\u00B0 C)") +
     ggplot2::scale_x_date(date_labels = "%Y/%m/%d") +
-    # ggplot2::scale_fill_manual("", labels = c("Prediction interval"), values = c("grey")) +
+    # ggplot2::scale_fill_manual(
+    #   "", labels = c("Prediction interval"), values = c("grey")
+    # ) +
     ggplot2::theme_bw()
 
   plotly::ggplotly(g1)
