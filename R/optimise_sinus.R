@@ -78,6 +78,23 @@ optimise_sinus_fixedPeriod <- function(df, period_length = 365.25)
   date_max <- get_extreme(FUN = which.max)
   date_min <- get_extreme(FUN = which.min)
 
+  left_join_day_number_value <- function(df_left, df) {
+    df_left %>%
+      dplyr::left_join(
+        tibble::as_tibble(df[, c("day_number", "value")]),
+        by = "day_number"
+      ) %>%
+      dplyr::rename(observed = .data$value) %>%
+      dplyr::select(
+        .data$label,
+        .data$day_number,
+        .data$date,
+        .data$observed,
+        .data$simulated,
+        .data$point_type
+      )
+  }
+
   extrema <- tibble::tibble(
     label = metadata$label,
     date = c(date_max, date_min),
@@ -87,19 +104,7 @@ optimise_sinus_fixedPeriod <- function(df, period_length = 365.25)
     ),
     point_type = c("max", "min")
   ) %>%
-    dplyr::left_join(
-      tibble::as_tibble(df[, c("day_number", "value")]),
-      by = "day_number"
-    ) %>%
-    dplyr::rename(observed = .data$value) %>%
-    dplyr::select(
-      .data$label,
-      .data$day_number,
-      .data$date,
-      .data$observed,
-      .data$simulated,
-      .data$point_type
-    )
+    left_join_day_number_value(df)
 
   quarter_period <- period_length / 4
 
@@ -114,19 +119,7 @@ optimise_sinus_fixedPeriod <- function(df, period_length = 365.25)
     day_number = as.integer(df$day_number[1] + .data$date - df$date[1]),
     simulated = predict(fit.lm2, newdata = tibble::tibble(day_number = day_number))
   ) %>%
-    dplyr::left_join(
-      tibble::as_tibble(df[, c("day_number", "value")]),
-      by = "day_number"
-    ) %>%
-    dplyr::rename(observed = .data$value) %>%
-    dplyr::select(
-      .data$label,
-      .data$day_number,
-      .data$date,
-      .data$observed,
-      .data$simulated,
-      .data$point_type
-    )
+    left_join_day_number_value(df)
 
   points <- dplyr::bind_rows(turning_points, extrema) %>%
     dplyr::arrange(.data$date)
