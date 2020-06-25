@@ -32,7 +32,7 @@ if (! require("remotes")) {
 remotes::install_github("KWB-R/kwb.heatsine")
 ```
 
-# Data preparation 
+# Data prerequisites 
 
 The sinus fit optimisation works for for daily time series of a surface water
 and a groundwater monitoring point, which follow the following requirements:
@@ -50,7 +50,7 @@ WATER`). The value of the `<monitoring_id>` will be used for labeling the
 monitoring points in the plots and can be almost any value but must not contain
 `_` (underscore) or `" "` (space).
 
-# Data structure  
+## Data structure  
 
 The data structure of each `.csv` file is very simple as it contains only the
 two columns `date` (formatted: `YYYY-MM-DD`, e.g. `2020-06-23`) and `value`
@@ -83,7 +83,7 @@ data_sw <- load_temp("temperature_surface-water_TEGsee-mikrosieb.csv")
 data_gw <- load_temp("temperature_groundwater_TEG343.csv")
 ```
 
-## Plot
+## Visualise
 
 Plot time series for whole time period (moveover on data points to select)
   
@@ -99,10 +99,10 @@ kwb.heatsine::plot_temperature_interactive(data_sw)
 kwb.heatsine::plot_temperature_interactive(data_gw)
 ```
 
-# Select
+## Select
 
-Reduce time period to user input (`date_end` is optional, if not given 
-it is set to 'date_start' + 365.25 days)
+Reduce time period to a full sinus period which is definde by the user input 
+(`date_end` is optional, if not given it is set to 'date_start' + 365.25 days).
 
 ```{r}
 data_sw_selected <- kwb.heatsine::select_timeperiod(
@@ -120,13 +120,13 @@ data_gw_selected <- kwb.heatsine::select_timeperiod(
 
 Plot selected datasets:
 
-## Surface Water (selected)
+### Surface Water (selected)
 
 ```{r}
 kwb.heatsine::plot_temperature_interactive(df = data_sw_selected)
 ```
 
-## Grundwater Water (selected)
+### Grundwater (selected)
 
 ```{r}
 kwb.heatsine::plot_temperature_interactive(df = data_gw_selected)
