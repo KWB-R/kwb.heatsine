@@ -139,30 +139,30 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>path</th>
-      <td><p>path to csv file with temperature data and columns: "type" (i.e. "groundwater", "surface-water"), "date" (YYYY-MM-DD) and "value"</p></td>
+      <td><p>path to csv file with temperature data and columns: "date" (YYYY-MM-DD) and "value"</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>tibble with temperature data and columns "type" (i.e. "groundwater", "surface-water"), "date" and "value"</p>
+    <p>tibble with temperature data and columns "date" and "value"</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>path</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>kwb.heatsine</span><span class='kw ns'>::</span><span class='fu'><a href='extdata_file.html'>extdata_file</a></span>(<span class='st'>"temperature_groundwater_TEG343.csv"</span>)
 <span class='no'>gw_data</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>kwb.heatsine</span><span class='kw ns'>::</span><span class='fu'>load_temperature_from_csv</span>(<span class='no'>path</span>)
-<span class='no'>gw_data</span></div><div class='output co'>#&gt; # A tibble: 2,708 x 3
-#&gt;    type        date       value
-#&gt;    &lt;chr&gt;       &lt;date&gt;     &lt;dbl&gt;
-#&gt;  1 groundwater 2012-03-28  8.70
-#&gt;  2 groundwater 2012-03-29  8.60
-#&gt;  3 groundwater 2012-09-05 12.9 
-#&gt;  4 groundwater 2012-09-06 12.9 
-#&gt;  5 groundwater 2012-09-07 13   
-#&gt;  6 groundwater 2012-09-08 13   
-#&gt;  7 groundwater 2012-09-09 13.1 
-#&gt;  8 groundwater 2012-09-10 13.1 
-#&gt;  9 groundwater 2012-09-11 13.1 
-#&gt; 10 groundwater 2012-09-12 13.2 
+<span class='no'>gw_data</span></div><div class='output co'>#&gt; # A tibble: 2,708 x 2
+#&gt;    date       value
+#&gt;    &lt;date&gt;     &lt;dbl&gt;
+#&gt;  1 2012-03-28  8.70
+#&gt;  2 2012-03-29  8.60
+#&gt;  3 2012-09-05 12.9 
+#&gt;  4 2012-09-06 12.9 
+#&gt;  5 2012-09-07 13   
+#&gt;  6 2012-09-08 13   
+#&gt;  7 2012-09-09 13.1 
+#&gt;  8 2012-09-10 13.1 
+#&gt;  9 2012-09-11 13.1 
+#&gt; 10 2012-09-12 13.2 
 #&gt; # … with 2,698 more rows</div><div class='input'>
 </div></pre>
   </div>

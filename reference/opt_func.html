@@ -132,7 +132,7 @@
     <p>Optimise Sinus Fit Function</p>
     </div>
 
-    <pre class="usage"><span class='fu'>opt_func</span>(<span class='no'>period</span>, <span class='no'>df</span>, <span class='kw'>opt_criteria</span> <span class='kw'>=</span> <span class='st'>"rmse"</span>, <span class='kw'>debug</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>opt_func</span>(<span class='no'>period</span>, <span class='no'>df</span>, <span class='kw'>opt_criteria</span> <span class='kw'>=</span> <span class='st'>"RMSE"</span>, <span class='kw'>debug</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -143,11 +143,11 @@
     </tr>
     <tr>
       <th>df</th>
-      <td><p>data frame with temperature data and columns "type" (i.e. "groundwater", "surface-water"), "date" (YYYY-MM-DD) and "value"</p></td>
+      <td><p>data frame with temperature data and columns "date" (YYYY-MM-DD) and "value"</p></td>
     </tr>
     <tr>
       <th>opt_criteria</th>
-      <td><p>(default: "rmse"), for other options check: ?hydroGOF::gof</p></td>
+      <td><p>(default: "RMSE"), for other options check: ?hydroGOF::gof</p></td>
     </tr>
     <tr>
       <th>debug</th>
