@@ -41,7 +41,8 @@ Suggests:
     htmlwidgets,
     knitr,
     rmarkdown,
-    withr
+    withr,
+    testthat
 Remotes: 
     github::kwb-r/kwb.utils
 VignetteBuilder: 
