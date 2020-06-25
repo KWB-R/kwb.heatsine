@@ -71,11 +71,12 @@ optimise_sinus_fixedPeriod <- function(df, period_length = 365.25)
     x0 = atan2(beta, alpha)
   )
 
-  is_max <- which.max(fit.lm2$fitted.values)
-  is_min <- which.min(fit.lm2$fitted.values)
+  get_extreme <- function(FUN) {
+    df$date[as.numeric(names(f(fit.lm2$fitted.values)))]
+  }
 
-  date_max <- df$date[as.numeric(names(is_max))]
-  date_min <- df$date[as.numeric(names(is_min))]
+  date_max <- get_extreme(FUN = which.max)
+  date_min <- get_extreme(FUN = which.min)
 
   extrema <- tibble::tibble(
     label = metadata$label,
