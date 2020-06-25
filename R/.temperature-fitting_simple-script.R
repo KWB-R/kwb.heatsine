@@ -16,11 +16,13 @@
 # kwb.utils::sourceScripts(
 #   dir("R", pattern = "^\\.", recursive = TRUE, full.names = TRUE)
 # )
+
+# Load the pipe operator
+`%>%` <- magrittr::`%>%`
+
 # MAIN -------------------------------------------------------------------------
 if (FALSE)
 {
-  `%>%` <- magrittr::`%>%`
-
   #############################################################################
   ### 1. Data preparation (example data sets for ground- and surface water)
 
@@ -92,16 +94,16 @@ if (FALSE)
   tolerance <- 0.001 # the desired accuracy ()
   debug <- TRUE
 
-  do_sinus_optimisation <- function(df) {
+  do_sinus_optimisation <- function(temp_df) {
     kwb.heatsine::optimise_sinus_variablePeriod(
-      temp_df = df,
+      temp_df = temp_df,
       opt_limits = limits,
       opt_tolerance = tolerance,
       opt_debug = debug
     )
   }
 
-  sinusfit_sw <- do_sinus_optimisation(data_sw_selected)
+  sinusfit_sw <- do_sinus_optimisation(temp_df = data_sw_selected)
 
   # Check results
   # y0 <- sinusfit_sw$paras$y0
@@ -121,7 +123,7 @@ if (FALSE)
   # }
   #
 
-  sinusfit_gw <- do_sinus_optimisation(data_gw_selected)
+  sinusfit_gw <- do_sinus_optimisation(temp_df = data_gw_selected)
 
   ####################################################################
   ### 4. Results
