@@ -19,13 +19,16 @@
 # MAIN -------------------------------------------------------------------------
 if (FALSE)
 {
-
   `%>%` <- magrittr::`%>%`
+
   #############################################################################
   ### 1. Data preparation (example data sets for ground- and surface water)
 
-  # 1.1 Load temperature from Excel file (file: "Temperatur_in_Br _und_GWM_für_KWB.xlsx" needed!)
-  temp <- load_temperature_from_excel(dir_path = "~/../Downloads/kwb-cloud/projects/smart-control/")
+  # 1.1 Load temperature from Excel file
+  # (file: "Temperatur_in_Br _und_GWM_für_KWB.xlsx" needed!)
+  temp <- load_temperature_from_excel(
+    dir_path = "~/../Downloads/kwb-cloud/projects/smart-control/"
+  )
 
   filter_rename_select <- function(df, name) {
     df %>%
@@ -39,18 +42,25 @@ if (FALSE)
 
   kwb.utils::createDirectory("csv")
 
-  readr::write_csv(data_sw, path = "inst/extdata/temperature_surface-water_TEGsee-mikrosieb.csv")
-  readr::write_csv(data_gw, path = "inst/extdata/temperature_groundwater_TEG343.csv")
+  write_local_csv <- function(df, file_base) {
+    readr::write_csv(df, sprintf("inst/extdata/%s.csv", file_base))
+  }
+
+  write_local_csv(data_sw, "temperature_surface-water_TEGsee-mikrosieb")
+  write_local_csv(data_gw, "temperature_groundwater_TEG343")
 
   ####################################################################
   ### 2. Interactively plot & select data
 
-  path_csv_sw <- kwb.heatsine::extdata_file("temperature_surface-water_TEGsee-mikrosieb.csv")
-  path_csv_gw <- kwb.heatsine::extdata_file("temperature_groundwater_TEG343.csv")
+  load_temp <- function(file_base) {
+    kwb.heatsine::load_temperature_from_csv(
+      kwb.heatsine::extdata_file(paste0(file_base, ".csv"))
+    )
+  }
 
   ### Interactively select time period
-  data_sw <- kwb.heatsine::load_temperature_from_csv(path_csv_sw)
-  data_gw <- kwb.heatsine::load_temperature_from_csv(path_csv_gw)
+  data_sw <- load_temp("temperature_surface-water_TEGsee-mikrosieb")
+  data_gw <- load_temp("temperature_groundwater_TEG343")
 
   # 2.1 Surface water
 
@@ -190,7 +200,7 @@ if (FALSE)
 }
 
 ### Test Monte Carlo
-if(FALSE)
+if (FALSE)
 {
   res_sw <- run_montecarlo(sinus_fit_list = sinusfit_sw, nMC = 1000)
   res_gw <- run_montecarlo(sinus_fit_list = sinusfit_gw, nMC = 1000)
