@@ -30,42 +30,40 @@ if (! require("remotes")) {
 
 # Install KWB package 'kwb.heatsine' from GitHub
 remotes::install_github("KWB-R/kwb.heatsine")
-
 ```
 
 # Data preparation 
 
-The sinus fit optimisation works for for daily time series of a surface water and 
-a groundwater monitoring point, which follow the following requirements: 
+The sinus fit optimisation works for for daily time series of a surface water
+and a groundwater monitoring point, which follow the following requirements:
 
 ## File naming
 
-The time series must be provided in a `.csv` (comma separated value) file, which 
+The time series must be provided in a `.csv` (comma separated value) file, which
 follows the naming convention:
 
 temperature_`<type>`_`<monitoring_id>`.csv
 
-where `<type>` needs to be exactly `groundwater` or `surface-water`. In case any 
-other value for `<type>` is chosen the program will not work (e.g `SURFACE WATER`). 
-The value of the `<monitoring_id>` will be used for labeling the monitoring points
-in the plots and can be almost any value but must not contain `_` (underscore) 
-or `" "` (space).
+where `<type>` needs to be exactly `groundwater` or `surface-water`. In case any
+other value for `<type>` is chosen the program will not work (e.g `SURFACE
+WATER`). The value of the `<monitoring_id>` will be used for labeling the
+monitoring points in the plots and can be almost any value but must not contain
+`_` (underscore) or `" "` (space).
 
 # Data structure  
 
-The data structure of each `.csv` file is very simple as it contains only the 
-two columns `date` (formatted: `YYYY-MM-DD`, e.g. `2020-06-23`) and `value` (temperature 
-data in degree Celsius) as shown exemplary below:
+The data structure of each `.csv` file is very simple as it contains only the
+two columns `date` (formatted: `YYYY-MM-DD`, e.g. `2020-06-23`) and `value`
+(temperature data in degree Celsius) as shown exemplary below:
 
 ```{r eval = FALSE}
 date,value
 2020-06-23,12.3
 2020-06-24,12.3
-
 ```
 
-Please make sure that both columns `date` and `value` are all lowercase and correctly 
-spelled as the program will not work if this is not the case.
+Please make sure that both columns `date` and `value` are all lowercase and
+correctly spelled as the program will not work if this is not the case.
 
 # Data preparation
 
@@ -75,13 +73,14 @@ spelled as the program will not work if this is not the case.
 ## Load the R package
 library(kwb.heatsine)
 
-path_csv_sw <- kwb.heatsine::extdata_file("temperature_surface-water_TEGsee-mikrosieb.csv")
-path_csv_gw <- kwb.heatsine::extdata_file("temperature_groundwater_TEG343.csv")
+load_temp <- function(base_name) {
+  kwb.heatsine::load_temperature_from_csv(
+    kwb.heatsine::extdata_file(base_name)
+  )
+}
 
-
-data_sw <- kwb.heatsine::load_temperature_from_csv(path_csv_sw)
-data_gw <- kwb.heatsine::load_temperature_from_csv(path_csv_gw)
-
+data_sw <- load_temp("temperature_surface-water_TEGsee-mikrosieb.csv")
+data_gw <- load_temp("temperature_groundwater_TEG343.csv")
 ```
 
 ## Plot
@@ -100,23 +99,23 @@ kwb.heatsine::plot_temperature_interactive(data_sw)
 kwb.heatsine::plot_temperature_interactive(data_gw)
 ```
 
-
 # Select
 
 Reduce time period to user input (`date_end` is optional, if not given 
 it is set to 'date_start' + 365.25 days)
 
 ```{r}
+data_sw_selected <- kwb.heatsine::select_timeperiod(
+  data_sw, 
+  date_start = "2015-10-10",
+  date_end = "2016-10-14"
+)
 
-data_sw_selected <- kwb.heatsine::select_timeperiod(data_sw, 
-                                                    date_start = "2015-10-10",
-                                                    date_end = "2016-10-14")
-
-
-data_gw_selected <- kwb.heatsine::select_timeperiod(data_gw,
-                                        date_start = "2015-12-28",
-                                        date_end = "2016-12-26")
-  
+data_gw_selected <- kwb.heatsine::select_timeperiod(
+  data_gw,
+  date_start = "2015-12-28",
+  date_end = "2016-12-26"
+)
 ```
 
 Plot selected datasets:
@@ -133,30 +132,34 @@ kwb.heatsine::plot_temperature_interactive(df = data_sw_selected)
 kwb.heatsine::plot_temperature_interactive(df = data_gw_selected)
 ```
 
-
 # Sinus optimisation 
-
 
 ## Run
 
 ```{r}
-
-limits <- c(100,500) # minimum/maximum period length
+limits <- c(100, 500) # minimum/maximum period length
 tolerance <- 0.001 # the desired accuracy ()
 debug <- TRUE
 
-sinusfit_sw <- kwb.heatsine::optimise_sinus_variablePeriod(temp_df = data_sw_selected,
-                                               opt_limits = limits,
-                                               opt_tolerance = tolerance,
-                                               opt_debug = debug)
+# Helper function to do the sinus optimisation
+do_sinus_optimisation <- function(df) {
+  kwb.heatsine::optimise_sinus_variablePeriod(
+    temp_df = df,
+    opt_limits = limits,
+    opt_tolerance = tolerance,
+    opt_debug = debug
+  )
+}
 
-sinusfit_gw <- kwb.heatsine::optimise_sinus_variablePeriod(temp_df = data_gw_selected,
-                                               opt_limits = limits,
-                                               opt_tolerance = tolerance,
-                                               opt_debug = debug)
+sinusfit_sw <- do_sinus_optimisation(df = data_sw_selected)
+sinusfit_gw <- do_sinus_optimisation(df = data_gw_selected)
 
 # Generate data frame with simulated and observed values
-predictions <- kwb.heatsine::get_predictions(sinusfit_sw, sinusfit_gw, retardation_factor = 1.8)
+predictions <- kwb.heatsine::get_predictions(
+  sinusfit_sw = sinusfit_sw, 
+  sinusfit_gw = sinusfit_gw, 
+  retardation_factor = 1.8
+)
 ```
 
 ## Analyse
@@ -166,7 +169,6 @@ predictions <- kwb.heatsine::get_predictions(sinusfit_sw, sinusfit_gw, retardati
 ```{r}
 kwb.heatsine::plot_prediction_interactive(predictions)
 ```
-
 
 ### Table: Traveltimes
 ```{r}
@@ -191,45 +193,63 @@ knitr::kable(predictions$paras)
 knitr::kable(head(predictions$data))
 ```
 
-
 ## Export 
 
 Export results to `csv`:
 
 ```{r}
-kwb.utils::createDirectory("csv")
-readr::write_csv(predictions$data,
-                 path = "csv/sinus-fit_predictions.csv")
-readr::write_csv(predictions$paras,
-                 path = "csv/sinus-fit_parameters.csv")
-readr::write_csv(predictions$gof,
-                 path = "csv/sinus-fit_goodness-of-fit.csv")
-readr::write_csv(predictions$traveltimes,
-                 path = "csv/sinus-fit_traveltimes.csv")
-readr::write_csv(
-  data.frame(residuals = predictions$data$simulated - predictions$data$observed),
-  "csv/sinus-fit_residuals.csv"
-)
+write_to_csv <- function(df, file_base) {
+  readr::write_csv(df, path = file.path(
+    kwb.utils::createDirectory("csv"), paste0(file_base, ".csv")
+  ))
+}
 
+get_residuals <- function(df) {
+  data.frame(residuals = df$simulated - df$observed)
+}
+
+write_to_csv(predictions$data, "sinus-fit_predictions")
+write_to_csv(predictions$paras, "sinus-fit_parameters")
+write_to_csv(predictions$gof, "sinus-fit_goodness-of-fit")
+write_to_csv(predictions$traveltimes, "sinus-fit_traveltimes")
+write_to_csv(get_residuals(predictions$data), "csv/sinus-fit_residuals")
 
 ## Export plots:
-kwb.utils::createDirectory("plots")
-withr::with_dir(new = "plots", code = {
-  plot_temperature_interactive(data_sw) %>%
-    htmlwidgets::saveWidget("temperature_surface-water_time-series_full.html")
+
+save_to_html <- function(p, file_base) {
+  htmlwidgets::saveWidget(p, paste0(file_base, ".html"))
+}
+
+withr::with_dir(new = kwb.utils::createDirectory("plots"), code = {
   
-  plot_temperature_interactive(df = data_sw_selected) %>%
-    htmlwidgets::saveWidget("temperature_surface-water_time-series_selected.html")
+  save_to_html(
+    plot_temperature_interactive(data_sw), 
+    "temperature_surface-water_time-series_full"
+  )
   
-  plot_temperature_interactive(data_gw) %>%
-    htmlwidgets::saveWidget("temperature_groundwater_time-series_full.html")
-  plot_temperature_interactive(df = data_gw_selected) %>%
-    htmlwidgets::saveWidget("temperature_groundwater_time-series_selected.html")
+  save_to_html(
+    plot_temperature_interactive(data_sw_selected),
+    "temperature_surface-water_time-series_selected"
+  )
   
-  plot_prediction_interactive(predictions) %>%
-    htmlwidgets::saveWidget("temperature_prediction.html")
+  save_to_html(
+    plot_temperature_interactive(data_gw), 
+    "temperature_groundwater_time-series_full"
+  )
   
-  # plot_residuals_interactive(prediction_df, binwidth = 0.5) %>%
-  #   htmlwidgets::saveWidget("temperature_prediction_residuals.html"
+  save_to_html(
+    plot_temperature_interactive(data_gw_selected),
+    "temperature_groundwater_time-series_selected"
+  )
+  
+  save_to_html(
+    plot_prediction_interactive(predictions), 
+    "temperature_prediction", 
+  )
+  
+  # save_to_html(
+  #   plot_residuals_interactive(prediction_df, binwidth = 0.5),
+  #   "temperature_prediction_residuals"
+  # )
 })  
 ```
