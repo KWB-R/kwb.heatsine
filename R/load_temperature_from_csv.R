@@ -4,7 +4,7 @@
 #' @return tibble with temperature data and columns "date" and "value"
 #' @export
 #' @importFrom readr read_csv
-#' @importFrom kwb.utils safePath
+#' @importFrom kwb.utils asNoFactorDataFrame safePath
 #' @importFrom stringr str_split_fixed
 #' @examples
 #' path <- kwb.heatsine::extdata_file("temperature_groundwater_TEG343.csv")
