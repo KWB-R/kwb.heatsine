@@ -60,11 +60,13 @@ optimise_sinus_fixedPeriod <- function(df, period_length = 365.25)
     obs = fit.lm2$model$value
   )))
 
+  coeffs <- stats::coef(fit.lm2)
+
   paras <- tibble::tibble(
     period_length = period_length,
-    alpha = stats::coef(fit.lm2)[2],
-    beta = stats::coef(fit.lm2)[3],
-    y0 = stats::coef(fit.lm2)[1],
+    alpha = coeffs[2L],
+    beta = coeffs[3L],
+    y0 = coeffs[1L],
     a = sqrt(alpha^2 + beta^2),
     x0 = atan2(beta, alpha)
   )
