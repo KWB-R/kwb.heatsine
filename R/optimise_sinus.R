@@ -72,7 +72,7 @@ optimise_sinus_fixedPeriod <- function(df, period_length = 365.25)
   )
 
   get_extreme <- function(FUN) {
-    df$date[as.numeric(names(f(fit.lm2$fitted.values)))]
+    df$date[as.numeric(names(FUN(fit.lm2$fitted.values)))]
   }
 
   date_max <- get_extreme(FUN = which.max)
