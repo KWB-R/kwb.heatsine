@@ -29,6 +29,7 @@ Imports:
     plotly,
     readr,
     rlang,
+    stringr,
     tibble,
     tidyr
 Suggests: 

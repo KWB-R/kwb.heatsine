@@ -5,6 +5,7 @@
 #' @export
 #' @importFrom readr read_csv
 #' @importFrom kwb.utils safePath
+#' @importFrom stringr str_split_fixed
 #' @examples
 #' path <- kwb.heatsine::extdata_file("temperature_groundwater_TEG343.csv")
 #' gw_data <- kwb.heatsine::load_temperature_from_csv(path)
