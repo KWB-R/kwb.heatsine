@@ -214,21 +214,18 @@ if (FALSE)
 
   plotly::ggplotly(g)
 
-  mr_sw <- res_sw %>%
-    dplyr::select(run_id, day_number, y_r_plus_sigma_r) %>%
-    dplyr::group_by(run_id) %>%
-    dplyr::summarise(
-      min = which.min(y_r_plus_sigma_r),
-      max = which.max(y_r_plus_sigma_r)
-    )
+  get_range_per_run <- function(df) {
+    df %>%
+      dplyr::select(.data$run_id, .data$day_number, .data$y_r_plus_sigma_r) %>%
+      dplyr::group_by(.data$run_id) %>%
+      dplyr::summarise(
+        min = which.min(.data$y_r_plus_sigma_r),
+        max = which.max(.data$y_r_plus_sigma_r)
+      )
+  }
 
-  mr_gw <- res_gw %>%
-    dplyr::select(run_id, day_number, y_r_plus_sigma_r) %>%
-    dplyr::group_by(run_id) %>%
-    dplyr::summarise(
-      min = which.min(y_r_plus_sigma_r),
-      max = which.max(y_r_plus_sigma_r)
-    )
+  mr_sw <- get_range_per_run(res_sw)
+  mr_gw <- get_range_per_run(res_gw)
 
   hist(mr_sw$min)
 
