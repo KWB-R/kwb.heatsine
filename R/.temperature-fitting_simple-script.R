@@ -76,15 +76,15 @@ if (FALSE)
     date_end = "2016-10-14"
   )
 
-  kwb.heatsine::plot_temperature_interactive(df = data_sw_selected)
-
   data_gw_selected <- kwb.heatsine::select_timeperiod(
     data_gw,
     date_start = "2015-12-28",
     date_end = "2016-12-26"
   )
 
-  plot_temperature_interactive(df = data_gw_selected)
+
+  kwb.heatsine::plot_temperature_interactive(df = data_sw_selected)
+  kwb.heatsine::plot_temperature_interactive(df = data_gw_selected)
 
   ####################################################################
   ### 3. Optimise sinus fit (surface water and groundwater)
@@ -92,12 +92,16 @@ if (FALSE)
   tolerance <- 0.001 # the desired accuracy ()
   debug <- TRUE
 
-  sinusfit_sw <- kwb.heatsine::optimise_sinus_variablePeriod(
-    temp_df = data_sw_selected,
-    opt_limits = limits,
-    opt_tolerance = tolerance,
-    opt_debug = debug
-  )
+  do_sinus_optimisation <- function(df) {
+    kwb.heatsine::optimise_sinus_variablePeriod(
+      temp_df = df,
+      opt_limits = limits,
+      opt_tolerance = tolerance,
+      opt_debug = debug
+    )
+  }
+
+  sinusfit_sw <- do_sinus_optimisation(data_sw_selected)
 
   # Check results
   # y0 <- sinusfit_sw$paras$y0
@@ -117,12 +121,7 @@ if (FALSE)
   # }
   #
 
-  sinusfit_gw <- kwb.heatsine::optimise_sinus_variablePeriod(
-    temp_df = data_gw_selected,
-    opt_limits = limits,
-    opt_tolerance = tolerance,
-    opt_debug = debug
-  )
+  sinusfit_gw <- do_sinus_optimisation(data_gw_selected)
 
   ####################################################################
   ### 4. Results
