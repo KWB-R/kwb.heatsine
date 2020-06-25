@@ -7,10 +7,10 @@
 load_temperature_from_csv(path)
 }
 \arguments{
-\item{path}{path to csv file with temperature data and columns: "type" (i.e. "groundwater", "surface-water"), "date" (YYYY-MM-DD) and "value"}
+\item{path}{path to csv file with temperature data and columns: "date" (YYYY-MM-DD) and "value"}
 }
 \value{
-tibble with temperature data and columns "type" (i.e. "groundwater", "surface-water"), "date" and "value"
+tibble with temperature data and columns "date" and "value"
 }
 \description{
 Load Temperature Data From CSV

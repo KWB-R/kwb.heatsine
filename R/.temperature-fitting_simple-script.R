@@ -25,20 +25,18 @@ if (FALSE)
   ### 1. Data preparation (example data sets for ground- and surface water)
 
   # 1.1 Load temperature from Excel file (file: "Temperatur_in_Br _und_GWM_für_KWB.xlsx" needed!)
-  temp <- load_temperature_from_excel(dir_path = "~/../Downloads/kwb-cloud/smart-control/raw-data")
+  temp <- load_temperature_from_excel(dir_path = "~/../Downloads/kwb-cloud/projects/smart-control/")
 
 
   data_sw <- temp %>%
     dplyr::filter(Name_Messstelle == "TEGsee-mikrosiebO") %>%
     dplyr::rename(date = PN_Datum, value = Temperatur) %>%
-    dplyr::mutate(type = "surface-water") %>%
-    dplyr::select(type, date, value)
+    dplyr::select(date, value)
 
   data_gw <- temp %>%
     dplyr::filter(Name_Messstelle == "TEG343") %>%
     dplyr::rename(date = PN_Datum, value = Temperatur) %>%
-    dplyr::mutate(type = "groundwater") %>%
-    dplyr::select(type, date, value)
+    dplyr::select(date, value)
 
   kwb.utils::createDirectory("csv")
 
@@ -70,8 +68,6 @@ if (FALSE)
 
   kwb.heatsine::plot_temperature_interactive(df = data_sw_selected)
 
-
-  kwb.heatsine::plot_temperature_interactive(data_gw)
 
   data_gw_selected <- kwb.heatsine::select_timeperiod(data_gw,
                                         date_start = "2015-12-28",

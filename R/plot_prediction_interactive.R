@@ -7,14 +7,17 @@
 #' @keywords internal
 #' @importFrom stats quantile
 #'
-mean_cl_quantile <- function(x, q = c(0.1, 0.9), na.rm = TRUE) {
-  dat <- data.frame(
+mean_cl_quantile <- function(x, q = c(0.1, 0.9), na.rm = TRUE)
+{
+  quantiles <- stats::quantile(x, probs = q, na.rm = na.rm)
+
+  data.frame(
     y = mean(x, na.rm = na.rm),
-    ymin = quantile(x, probs = q[1], na.rm = na.rm),
-    ymax = quantile(x, probs = q[2], na.rm = na.rm)
+    ymin = quantiles[1L],
+    ymax = quantiles[2L]
   )
-  return(dat)
 }
+
 #' Get tidy traveltimes
 #'
 #' @param traveltimes traveltimes object as retrieved by \code{\link{get_predictions}}
@@ -67,9 +70,10 @@ plot_prediction_interactive <- function(predictions) {
     ))
 
   g1 <- predictions$data %>%
+    dplyr::select(-.data$type, -.data$monitoring_id) %>%
     tidyr::gather(
       key = "temperature", value = "value",
-      -.data$type,
+      -.data$label,
       -.data$date,
       -.data$simulated_pi_lower,
       -.data$simulated_pi_upper
@@ -83,7 +87,7 @@ plot_prediction_interactive <- function(predictions) {
       )
     ) %>%
     ggplot2::ggplot(ggplot2::aes_string(x = "date", y = "value", col = "temperature")) +
-    ggplot2::facet_wrap(~ forcats::fct_rev(type), ncol = 1) +
+    ggplot2::facet_wrap(~ forcats::fct_rev(.data$label), ncol = 1) +
     ggplot2::geom_line() +
     ggplot2::geom_vline(
       data = traveltimes_tidy, mapping = ggplot2::aes(

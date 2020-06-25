@@ -7,7 +7,7 @@
 optimise_sinus_fixedPeriod(df, period_length = 365.25)
 }
 \arguments{
-\item{df}{data frame with temperature data and columns "type" (i.e. "groundwater", "surface-water"), "date" (YYYY-MM-DD) and "value"}
+\item{df}{data frame with temperature data and columns "date" (YYYY-MM-DD) and "value"}
 
 \item{period_length}{period length (default: 365.25)}
 }

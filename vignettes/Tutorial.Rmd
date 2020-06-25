@@ -14,15 +14,66 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
-library(kwb.heatsine)
+# Installation
+
+```{r setup, eval = FALSE}
+### Optionally: specify GitHub Personal Access Token (GITHUB_PAT)
+### See here why this might be important for you:
+### https://kwb-r.github.io/kwb.pkgbuild/articles/install.html#set-your-github_pat
+
+# Sys.setenv(GITHUB_PAT = "mysecret_access_token")
+
+# Install package "remotes" from CRAN
+if (! require("remotes")) {
+  install.packages("remotes", repos = "https://cloud.r-project.org")
+}
+
+# Install KWB package 'kwb.heatsine' from GitHub
+remotes::install_github("KWB-R/kwb.heatsine")
+
 ```
 
-# Data import 
+# Data preparation 
 
-## Load Temperature Data
+The sinus fit optimisation works for for daily time series of a surface water and 
+a groundwater monitoring point, which follow the following requirements: 
+
+## File naming
+
+The time series must be provided in a `.csv` (comma separated value) file, which 
+follows the naming convention:
+
+temperature_`<type>`_`<monitoring_id>`.csv
+
+where `<type>` needs to be exactly `groundwater` or `surface-water`. In case any 
+other value for `<type>` is chosen the program will not work (e.g `SURFACE WATER`). 
+The value of the `<monitoring_id>` will be used for labeling the monitoring points
+in the plots and can be almost any value but must not contain `_` (underscore) 
+or `" "` (space).
+
+# Data structure  
+
+The data structure of each `.csv` file is very simple as it contains only the 
+two columns `date` (formatted: `YYYY-MM-DD`, e.g. `2020-06-23`) and `value` (temperature 
+data in degree Celsius) as shown exemplary below:
+
+```{r eval = FALSE}
+date,value
+2020-06-23,12.3
+2020-06-24,12.3
+
+```
+
+Please make sure that both columns `date` and `value` are all lowercase and correctly 
+spelled as the program will not work if this is not the case.
+
+# Data preparation
+
+## Import
 
 ```{r}
+## Load the R package
+library(kwb.heatsine)
 
 path_csv_sw <- kwb.heatsine::extdata_file("temperature_surface-water_TEGsee-mikrosieb.csv")
 path_csv_gw <- kwb.heatsine::extdata_file("temperature_groundwater_TEG343.csv")
@@ -33,7 +84,7 @@ data_gw <- kwb.heatsine::load_temperature_from_csv(path_csv_gw)
 
 ```
 
-## Plot time series
+## Plot
 
 Plot time series for whole time period (moveover on data points to select)
   
@@ -50,7 +101,7 @@ kwb.heatsine::plot_temperature_interactive(data_gw)
 ```
 
 
-# Data selection
+# Select
 
 Reduce time period to user input (`date_end` is optional, if not given 
 it is set to 'date_start' + 365.25 days)
@@ -83,10 +134,10 @@ kwb.heatsine::plot_temperature_interactive(df = data_gw_selected)
 ```
 
 
-# Sinus optimisation for surface water and groundwater:
+# Sinus optimisation 
 
 
-## Perform optimisation 
+## Run
 
 ```{r}
 
@@ -108,7 +159,7 @@ sinusfit_gw <- kwb.heatsine::optimise_sinus_variablePeriod(temp_df = data_gw_sel
 predictions <- kwb.heatsine::get_predictions(sinusfit_sw, sinusfit_gw, retardation_factor = 1.8)
 ```
 
-## Results 
+## Analyse
 
 ### Interactive Plot
 
