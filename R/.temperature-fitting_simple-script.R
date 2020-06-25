@@ -27,16 +27,15 @@ if (FALSE)
   # 1.1 Load temperature from Excel file (file: "Temperatur_in_Br _und_GWM_für_KWB.xlsx" needed!)
   temp <- load_temperature_from_excel(dir_path = "~/../Downloads/kwb-cloud/projects/smart-control/")
 
+  filter_rename_select <- function(df, name) {
+    df %>%
+      dplyr::filter(Name_Messstelle == name) %>%
+      dplyr::rename(date = PN_Datum, value = Temperatur) %>%
+      dplyr::select(date, value)
+  }
 
-  data_sw <- temp %>%
-    dplyr::filter(Name_Messstelle == "TEGsee-mikrosiebO") %>%
-    dplyr::rename(date = PN_Datum, value = Temperatur) %>%
-    dplyr::select(date, value)
-
-  data_gw <- temp %>%
-    dplyr::filter(Name_Messstelle == "TEG343") %>%
-    dplyr::rename(date = PN_Datum, value = Temperatur) %>%
-    dplyr::select(date, value)
+  data_sw <- filter_rename_select(temp, "TEGsee-mikrosiebO")
+  data_gw <- filter_rename_select(temp, "TEG343")
 
   kwb.utils::createDirectory("csv")
 
@@ -51,7 +50,6 @@ if (FALSE)
 
   ### Interactively select time period
   data_sw <- kwb.heatsine::load_temperature_from_csv(path_csv_sw)
-
   data_gw <- kwb.heatsine::load_temperature_from_csv(path_csv_gw)
 
   # 2.1 Surface water
@@ -62,32 +60,34 @@ if (FALSE)
   ## 2.1.2 Reduce time period to user input ('date_end' is optional, if not given
   ##       it is set to 'date_start' + 365.25 days)
 
-  data_sw_selected <- kwb.heatsine::select_timeperiod(data_sw,
-                                        date_start = "2015-10-10",
-                                        date_end = "2016-10-14")
+  data_sw_selected <- kwb.heatsine::select_timeperiod(
+    data_sw,
+    date_start = "2015-10-10",
+    date_end = "2016-10-14"
+  )
 
   kwb.heatsine::plot_temperature_interactive(df = data_sw_selected)
 
-
-  data_gw_selected <- kwb.heatsine::select_timeperiod(data_gw,
-                                        date_start = "2015-12-28",
-                                        date_end = "2016-12-26")
+  data_gw_selected <- kwb.heatsine::select_timeperiod(
+    data_gw,
+    date_start = "2015-12-28",
+    date_end = "2016-12-26"
+  )
 
   plot_temperature_interactive(df = data_gw_selected)
-
 
   ####################################################################
   ### 3. Optimise sinus fit (surface water and groundwater)
   limits <- c(100,500) # minimum/maximum period length
   tolerance <- 0.001 # the desired accuracy ()
   debug <- TRUE
-  sinusfit_sw <- kwb.heatsine::optimise_sinus_variablePeriod(temp_df = data_sw_selected,
-                                               opt_limits = limits,
-                                               opt_tolerance = tolerance,
-                                               opt_debug = debug)
 
-
-
+  sinusfit_sw <- kwb.heatsine::optimise_sinus_variablePeriod(
+    temp_df = data_sw_selected,
+    opt_limits = limits,
+    opt_tolerance = tolerance,
+    opt_debug = debug
+  )
 
   # Check results
   # y0 <- sinusfit_sw$paras$y0
@@ -107,18 +107,20 @@ if (FALSE)
   # }
   #
 
-  sinusfit_gw <- kwb.heatsine::optimise_sinus_variablePeriod(temp_df = data_gw_selected,
-                                               opt_limits = limits,
-                                               opt_tolerance = tolerance,
-                                               opt_debug = debug)
-
+  sinusfit_gw <- kwb.heatsine::optimise_sinus_variablePeriod(
+    temp_df = data_gw_selected,
+    opt_limits = limits,
+    opt_tolerance = tolerance,
+    opt_debug = debug
+  )
 
   ####################################################################
   ### 4. Results
 
   # Generate data frame with simulated and observed values
-  predictions <- kwb.heatsine::get_predictions(sinusfit_sw, sinusfit_gw, retardation_factor = 1.8)
-
+  predictions <- kwb.heatsine::get_predictions(
+    sinusfit_sw, sinusfit_gw, retardation_factor = 1.8
+  )
 
   # Plot results interactively
   kwb.heatsine::plot_prediction_interactive(predictions)
@@ -127,60 +129,57 @@ if (FALSE)
   # select your own value)
   #plot_residuals_interactive(prediction_df, binwidth = 0.2)
 
-
-
-
   ####################################################################
   ### 5. Export results
 
   kwb.utils::createDirectory("csv")
-  readr::write_csv(predictions$data,
-                   path = "csv/sinus-fit_predictions.csv")
-  readr::write_csv(predictions$paras,
-                   path = "csv/sinus-fit_parameters.csv")
-  readr::write_csv(predictions$gof,
-                   path = "csv/sinus-fit_goodness-of-fit.csv")
-  readr::write_csv(predictions$traveltimes,
-                   path = "csv/sinus-fit_traveltimes.csv")
-  readr::write_csv(data.frame(residuals = predictions$data$simulated-predictions$data$observed),
-                   "csv/sinus-fit_residuals.csv")
 
+  write_to_csv <- function(df, file_base) readr::write_csv(
+    df, path = file.path("csv", paste0(file_base, ".csv"))
+  )
+
+  get_residuals <- function(df) data.frame(
+    residuals = df$simulated - df$observed
+  )
+
+  write_to_csv(predictions$data, "sinus-fit_predictions")
+  write_to_csv(predictions$paras, "sinus-fit_parameters")
+  write_to_csv(predictions$gof, "sinus-fit_goodness-of-fit")
+  write_to_csv(predictions$traveltimes, "sinus-fit_traveltimes")
+  write_to_csv(get_residuals(df = predictions$data), "sinus-fit_residuals")
 
   ## Export plots:
   kwb.utils::createDirectory("plots")
+
+  plot_to_html <- function(df, file_base) {
+    plot_temperature_interactive(df) %>%
+      htmlwidgets::saveWidget(paste0(file_base, ".html"))
+  }
+
   withr::with_dir(new = "plots", code = {
-    plot_temperature_interactive(data_sw) %>%
-      htmlwidgets::saveWidget("temperature_surface-water_time-series_full.html")
 
-    plot_temperature_interactive(df = data_sw_selected) %>%
-      htmlwidgets::saveWidget("temperature_surface-water_time-series_selected.html")
-
-    plot_temperature_interactive(data_gw) %>%
-      htmlwidgets::saveWidget("temperature_groundwater_time-series_full.html")
-    plot_temperature_interactive(df = data_gw_selected) %>%
-      htmlwidgets::saveWidget("temperature_groundwater_time-series_selected.html")
-
-    plot_prediction_interactive(predictions) %>%
-      htmlwidgets::saveWidget("temperature_prediction.html")
+    plot_to_html(data_sw, "temperature_surface-water_time-series_full")
+    plot_to_html(data_sw_selected, "temperature_surface-water_time-series_selected")
+    plot_to_html(data_gw, "temperature_groundwater_time-series_full")
+    plot_to_html(data_gw_selected, "temperature_groundwater_time-series_selected")
+    plot_to_html(predictions, "temperature_prediction")
 
     # plot_residuals_interactive(prediction_df, binwidth = 0.5) %>%
     #   htmlwidgets::saveWidget("temperature_prediction_residuals.html")
-  }
-  )
-
-
+  })
 }
 
-
 ### Test Monte Carlo
-if(FALSE) {
+if(FALSE)
+{
   res_sw <- run_montecarlo(sinus_fit_list = sinusfit_sw, nMC = 1000)
   res_gw <- run_montecarlo(sinus_fit_list = sinusfit_gw, nMC = 1000)
 
-
-  g <- ggplot2::ggplot(res_sw[1:1000, ], ggplot2::aes(x=day_number,
-                                                      y = y_r_plus_sigma_r,
-                                                      col = run_id)) +
+  g <- ggplot2::ggplot(res_sw[1:1000, ], ggplot2::aes(
+    x = day_number,
+    y = y_r_plus_sigma_r,
+    col = run_id
+  )) +
     # ggplot2::facet_wrap(~ run_id) +
     ggplot2::geom_line()
 
@@ -189,14 +188,18 @@ if(FALSE) {
   mr_sw <- res_sw %>%
     dplyr::select(run_id, day_number, y_r_plus_sigma_r) %>%
     dplyr::group_by(run_id) %>%
-    dplyr::summarise(min = which.min(y_r_plus_sigma_r),
-                     max = which.max(y_r_plus_sigma_r))
+    dplyr::summarise(
+      min = which.min(y_r_plus_sigma_r),
+      max = which.max(y_r_plus_sigma_r)
+    )
 
   mr_gw <- res_gw %>%
     dplyr::select(run_id, day_number, y_r_plus_sigma_r) %>%
     dplyr::group_by(run_id) %>%
-    dplyr::summarise(min = which.min(y_r_plus_sigma_r),
-                     max = which.max(y_r_plus_sigma_r))
+    dplyr::summarise(
+      min = which.min(y_r_plus_sigma_r),
+      max = which.max(y_r_plus_sigma_r)
+    )
 
   hist(mr_sw$min)
 
