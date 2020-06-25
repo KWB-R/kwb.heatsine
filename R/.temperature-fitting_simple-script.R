@@ -52,12 +52,15 @@ if (FALSE)
   ####################################################################
   ### 2. Interactively plot & select data
 
-  path_csv_sw <- kwb.heatsine::extdata_file("temperature_surface-water_TEGsee-mikrosieb.csv")
-  path_csv_gw <- kwb.heatsine::extdata_file("temperature_groundwater_TEG343.csv")
+  load_temp <- function(file_base) {
+    kwb.heatsine::load_temperature_from_csv(
+      kwb.heatsine::extdata_file(paste0(file_base, ".csv"))
+    )
+  }
 
   ### Interactively select time period
-  data_sw <- kwb.heatsine::load_temperature_from_csv(path_csv_sw)
-  data_gw <- kwb.heatsine::load_temperature_from_csv(path_csv_gw)
+  data_sw <- load_temp("temperature_surface-water_TEGsee-mikrosieb")
+  data_gw <- load_temp("temperature_groundwater_TEG343")
 
   # 2.1 Surface water
 
