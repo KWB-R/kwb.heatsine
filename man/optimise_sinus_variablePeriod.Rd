@@ -13,19 +13,22 @@ optimise_sinus_variablePeriod(
 )
 }
 \arguments{
-\item{temp_df}{data frame with temperature data and columns "date" (YYYY-MM-DD) and "value"}
+\item{temp_df}{data frame with temperature data and columns "date"
+(YYYY-MM-DD) and "value"}
 
 \item{optFunc}{optimisation function (default: \code{\link{opt_func}} )}
 
-\item{opt_limits}{optimisation limits for "period_length" (default: c(100,500))}
+\item{opt_limits}{optimisation limits for "period_length" (default:
+c(100,500))}
 
 \item{opt_tolerance}{(default: 0.001)}
 
 \item{opt_debug}{show debug information (default: FALSE)}
 }
 \value{
-list with fit parameters ("paras"), goodness-of-fit values ("gof"), special points, i.e. min/max/turning-points
-("points), fit model ("lm_model") and input data ("data")
+list with fit parameters ("paras"), goodness-of-fit values ("gof"),
+special points, i.e. min/max/turning-points ("points), fit model
+("lm_model") and input data ("data")
 }
 \description{
 Optimise Sinus Fit for Variable Period

@@ -7,13 +7,15 @@
 optimise_sinus_fixedPeriod(df, period_length = 365.25)
 }
 \arguments{
-\item{df}{data frame with temperature data and columns "date" (YYYY-MM-DD) and "value"}
+\item{df}{data frame with temperature data and columns "date" (YYYY-MM-DD)
+and "value"}
 
 \item{period_length}{period length (default: 365.25)}
 }
 \value{
-list with fit parameters ("paras"), goodness-of-fit values ("gof"), special points, i.e. min/max/turning-points
-("points), fit model ("lm_model") and input data ("data")
+list with fit parameters ("paras"), goodness-of-fit values ("gof"),
+special points, i.e. min/max/turning-points ("points), fit model
+("lm_model") and input data ("data")
 }
 \description{
 Optimise Sinus Fit for Fixed Period

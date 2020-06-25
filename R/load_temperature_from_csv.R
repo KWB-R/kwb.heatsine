@@ -12,30 +12,28 @@
 #' gw_data
 #'
 load_temperature_from_csv <- function(path)
-  {
+{
   path <- kwb.utils::safePath(path)
 
   filename <- basename(path)
 
-  metadata <- as.data.frame(stringr::str_split_fixed(filename, "_", n = 3))
+  metadata <- kwb.utils::asNoFactorDataFrame(
+    stringr::str_split_fixed(kwb.utils::removeExtension(filename), "_", n = 3)
+  )
 
   names(metadata) <- c("general", "type", "monitoring_id")
-  metadata[1,] <- sub("\\.csv", "", metadata[1,], ignore.case = TRUE)
 
-  valid_types <- c("groundwater", "surface-water")
   stopifnot(metadata$type %in% c("groundwater", "surface-water"))
 
-  tdata <- readr::read_csv(file = path, col_types = "Dd")
-
-  attr(tdata, "filename") <- filename
-  attr(tdata, "type") <- metadata$type
-  attr(tdata, "monitoring_id") <- metadata$monitoring_id
-  attr(tdata, "label") <- ifelse(metadata$monitoring_id != "",
-                                 sprintf("%s (%s)",
-                                         metadata$type,
-                                         metadata$monitoring_id),
-                                 metadata$type)
-
-  return(tdata)
-
+  structure(
+    readr::read_csv(file = path, col_types = "Dd"),
+    filename = filename,
+    type = metadata$type,
+    monitoring_id = metadata$monitoring_id,
+    label = ifelse(
+      nzchar(metadata$monitoring_id),
+      sprintf("%s (%s)", metadata$type, metadata$monitoring_id),
+      metadata$type
+    )
+  )
 }

@@ -3,8 +3,10 @@ title: "Tutorial"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Tutorial}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r, include = FALSE}
@@ -212,7 +214,7 @@ write_to_csv(predictions$data, "sinus-fit_predictions")
 write_to_csv(predictions$paras, "sinus-fit_parameters")
 write_to_csv(predictions$gof, "sinus-fit_goodness-of-fit")
 write_to_csv(predictions$traveltimes, "sinus-fit_traveltimes")
-write_to_csv(get_residuals(predictions$data), "csv/sinus-fit_residuals")
+write_to_csv(get_residuals(predictions$data), "sinus-fit_residuals")
 
 ## Export plots:
 
@@ -244,7 +246,7 @@ withr::with_dir(new = kwb.utils::createDirectory("plots"), code = {
   
   save_to_html(
     plot_prediction_interactive(predictions), 
-    "temperature_prediction", 
+    "temperature_prediction"
   )
   
   # save_to_html(
