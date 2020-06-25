@@ -15,13 +15,14 @@
 #' date_start = "2015-12-28", date_end = "2016-12-26")
 #' gw_data_selected
 #'
-select_timeperiod <- function(df,
-                              date_start,
-                              date_end = as.Date(date_start) + 365.25,
-                              col_date = "date") {
+select_timeperiod <- function(
+  df,
+  date_start,
+  date_end = as.Date(date_start) + 365.25,
+  col_date = "date"
+)
+{
   date <- dplyr::pull(df, col_date)
 
-  condition <- date >= date_start & date <= date_end
-
-  df[condition, ]
+  df[date >= date_start & date <= date_end, ]
 }
