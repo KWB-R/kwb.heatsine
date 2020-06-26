@@ -45,12 +45,10 @@ optimise_sinus_fixedPeriod <- function(df, period_length = 365.25)
 
   df$day_number <- as.numeric(df$date - df$date[1])
 
-  add_phi <- function(df) kwb.utils::setColumns(
-    df,
-    phi = 2 * pi * kwb.utils::selectColumns(df, "day_number") / period_length
+  fit.lm2 <- stats::lm(
+    value ~ sin(phi) + cos(phi),
+    data = add_phi(df, period_length)
   )
-
-  fit.lm2 <- stats::lm(value ~ sin(phi) + cos(phi), data = add_phi(df))
 
   # summary(fit.lm2)
 
@@ -94,15 +92,11 @@ optimise_sinus_fixedPeriod <- function(df, period_length = 365.25)
       )
   }
 
-  simulate <- function(day_number) {
-    predict(fit.lm2, newdata = add_phi(tibble::tibble(day_number = day_number)))
-  }
-
   extrema <- tibble::tibble(
     label = metadata$label,
     date = c(date_max, date_min),
     day_number = as.integer(df$day_number[1] + date - df$date[1]),
-    simulated = simulate(day_number),
+    simulated = simulate(fit.lm2, day_number, period_length),
     point_type = c("max", "min")
   ) %>%
     left_join_day_number_value(df)
@@ -118,7 +112,7 @@ optimise_sinus_fixedPeriod <- function(df, period_length = 365.25)
     ) %>%
       as.Date(),
     day_number = as.integer(df$day_number[1] + .data$date - df$date[1]),
-    simulated = simulate(day_number)
+    simulated = simulate(fit.lm2, day_number, period_length)
   ) %>%
     left_join_day_number_value(df)
 
