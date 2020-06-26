@@ -53,43 +53,44 @@ get_tidy_traveltimes <- function(traveltimes) {
 #'
 plot_prediction_interactive <- function(predictions)
 {
-  traveltimes_tidy <- get_tidy_traveltimes(predictions$traveltimes) %>%
-    dplyr::mutate(label = dplyr::if_else(
-      .data$type == "groundwater",
-      sprintf(
-        "%s (%s): traveltime_thermal: %3.1f days, traveltime_hydraulic: %3.1f days",
+  traveltimes_tidy <- predictions$traveltimes %>%
+    get_tidy_traveltimes() %>%
+    dplyr::mutate(
+      label = sprintf(
+        "%s (%s)%s",
         .data$point_type,
         .data$date,
-        .data$traveltime_thermal_days,
-        .data$traveltime_hydraulic_days
-      ),
-      sprintf(
-        "%s (%s)",
-        .data$point_type,
-        .data$date
+        dplyr::if_else(
+          .data$type == "groundwater",
+          sprintf(
+            ": traveltime_thermal: %3.1f days, traveltime_hydraulic: %3.1f days",
+            .data$traveltime_thermal_days,
+            .data$traveltime_hydraulic_days
+          ),
+          ""
+        )
       )
-    ))
+    )
+
+  copy_unless_observed <- function(.data, column) {
+    ifelse(.data[["temperature"]] == "observed", NA_real_, .data[[column]])
+  }
 
   g1 <- predictions$data %>%
     dplyr::select(-.data$type, -.data$monitoring_id) %>%
     tidyr::gather(
-      key = "temperature", value = "value",
-      -.data$label,
-      -.data$date,
-      -.data$simulated_pi_lower,
-      -.data$simulated_pi_upper
+      key = "temperature",
+      value = "value",
+      - .data$label,
+      - .data$date,
+      - .data$simulated_pi_lower,
+      - .data$simulated_pi_upper
     ) %>%
     dplyr::mutate(
-      simulated_pi_lower = ifelse(.data$temperature == "observed",
-        NA_real_, .data$simulated_pi_lower
-      ),
-      simulated_pi_upper = ifelse(.data$temperature == "observed",
-        NA_real_, .data$simulated_pi_upper
-      )
+      simulated_pi_lower = copy_unless_observed(.data, "simulated_pi_lower"),
+      simulated_pi_upper = copy_unless_observed(.data, "simulated_pi_upper")
     ) %>%
-    ggplot2::ggplot(ggplot2::aes_string(
-      x = "date", y = "value", col = "temperature"
-    )) +
+    ggplot2::ggplot(ggplot2::aes_string("date", "value", col = "temperature")) +
     ggplot2::facet_wrap(~ forcats::fct_rev(.data$label), ncol = 1) +
     ggplot2::geom_line() +
     ggplot2::geom_vline(
