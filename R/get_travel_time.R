@@ -10,20 +10,28 @@
 #' @importFrom tidyr spread
 #' @importFrom dplyr enquo bind_rows
 #'
-get_travel_time <- function(sinusfit_sw, sinusfit_gw, retardation_factor = 1.8) {
+get_travel_time <- function(sinusfit_sw, sinusfit_gw, retardation_factor = 1.8)
+{
+  get_label <- function(sinusfit) sinusfit$metadata$label
 
-  label_sw <- sinusfit_sw$metadata$label
-  label_gw <- sinusfit_gw$metadata$label
+  label_sw <- get_label(sinusfit_sw)
+  label_gw <- get_label(sinusfit_gw)
 
-  sinusfit_sw$points %>%
-    dplyr::select(-.data$day_number) %>%
-    dplyr::bind_rows(sinusfit_gw$points %>% dplyr::select(-.data$day_number)) %>%
-    dplyr::select(-.data$observed, -.data$simulated) %>%
+  remove_day_number <- function(df) dplyr::select(- .data$day_number)
+
+    dplyr::bind_rows(
+      remove_day_number(sinusfit_sw$points),
+      remove_day_number(sinusfit_gw$points)
+    ) %>%
+    dplyr::select(- .data$observed, - .data$simulated) %>%
     tidyr::spread(key = "label", value = "date") %>%
     dplyr::mutate(
-      traveltime_thermal_days = as.numeric(.data[[label_gw]] - .data[[label_sw]]),
+      traveltime_thermal_days = as.numeric(
+        .data[[label_gw]] - .data[[label_sw]]
+      ),
       retardation_factor = retardation_factor,
-      traveltime_hydraulic_days = .data$traveltime_thermal_days / retardation_factor
+      traveltime_hydraulic_days =
+        .data$traveltime_thermal_days / retardation_factor
     ) %>%
     dplyr::arrange(.data[[label_gw]]) %>%
     dplyr::select(
