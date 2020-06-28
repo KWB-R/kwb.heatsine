@@ -136,7 +136,11 @@ kwb.heatsine::plot_temperature_interactive(df = data_gw_selected)
 
 # Sinus optimisation 
 
+
 ## Run
+
+Sinus fit operation is performed by minimizing the RMSE error between observed 
+and simulated temperature curves.
 
 ```{r}
 limits <- c(100, 500) # minimum/maximum period length
@@ -178,6 +182,12 @@ knitr::kable(predictions$traveltimes)
 ```
 
 ### Table: Goodness of Fit 
+
+While only RMSE is used for optimising the sinus fit, a number of goodness-of-fit 
+parameters is also calculated and shown in the table below. For details on each 
+of these parameters the use is referred to the function `hydroGOF::gof()` which is 
+used for calculating all these values.
+
 ```{r}
 knitr::kable(predictions$gof)
 ```
@@ -199,7 +209,7 @@ knitr::kable(head(predictions$data))
 
 Export results to `csv`:
 
-```{r}
+```{r eval = FALSE}
 write_to_csv <- function(df, file_base) {
   readr::write_csv(df, path = file.path(
     kwb.utils::createDirectory("csv"), paste0(file_base, ".csv")
