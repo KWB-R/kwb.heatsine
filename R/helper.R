@@ -1,9 +1,10 @@
 # add_phi ----------------------------------------------------------------------
-add_phi <- function(df, period_length)
+add_phi <- function(df, period_length, dbg = FALSE)
 {
   kwb.utils::setColumns(
     df,
-    phi = 2 * pi * kwb.utils::selectColumns(df, "day_number") / period_length
+    phi = 2 * pi * kwb.utils::selectColumns(df, "day_number") / period_length,
+    dbg
   )
 }
 

@@ -47,7 +47,7 @@ optimise_sinus_fixedPeriod <- function(df, period_length = 365.25)
 
   fit.lm2 <- stats::lm(
     value ~ sin(phi) + cos(phi),
-    data = add_phi(df, period_length)
+    data = add_phi(df, period_length, dbg = FALSE)
   )
 
   # summary(fit.lm2)
