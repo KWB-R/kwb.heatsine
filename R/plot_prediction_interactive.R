@@ -30,7 +30,7 @@ mean_cl_quantile <- function(x, q = c(0.1, 0.9), na.rm = TRUE)
 #'
 get_tidy_traveltimes <- function(traveltimes) {
   tidyr::gather(traveltimes,
-    key = "type",
+    key = "label",
     value = "date",
     -.data$point_type,
     -.data$traveltime_thermal_days,
@@ -56,12 +56,12 @@ plot_prediction_interactive <- function(predictions)
   traveltimes_tidy <- predictions$traveltimes %>%
     get_tidy_traveltimes() %>%
     dplyr::mutate(
-      label = sprintf(
+      x_label = sprintf(
         "%s (%s)%s",
         .data$point_type,
         .data$date,
         dplyr::if_else(
-          .data$type == "groundwater",
+          grepl("^groundwater", x = .data$label) ,
           sprintf(
             ": traveltime_thermal: %3.1f days, traveltime_hydraulic: %3.1f days",
             .data$traveltime_thermal_days,
@@ -103,7 +103,7 @@ plot_prediction_interactive <- function(predictions)
     ) +
     # ggplot2::geom_text(
     #   data = traveltimes_tidy,
-    #   mapping = ggplot2::aes(x = .data$date, y = 0, label = .data$label),
+    #   mapping = ggplot2::aes(x = .data$date, y = 0, label = .data$x_labe),
     #   size = 4,
     #   angle = 90,
     #   vjust = -0.4,

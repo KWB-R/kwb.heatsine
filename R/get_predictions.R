@@ -18,13 +18,15 @@ get_predictions <- function(sinusfit_sw, sinusfit_gw, retardation_factor = 2)
 
   rename_fit_to_sim <- function(df) dplyr::rename(df, simulated = "fit")
 
-  get_prediction <- function(sinusfit, type) {
+  get_prediction <- function(sinusfit) {
 
     period_length <- sinusfit$paras$period_length
     day_numbers <- seq_len(period_length) - 1L
 
     data.frame(
-      type = type,
+      type = sinusfit$metadata$type,
+      monitoring_id = sinusfit$metadata$monitoring_id,
+      label = sinusfit$metadata$label,
       date = min(sinusfit$data$date, na.rm = TRUE) + day_numbers,
       simulate(
         model = sinusfit$lm_object,
@@ -36,8 +38,8 @@ get_predictions <- function(sinusfit_sw, sinusfit_gw, retardation_factor = 2)
       rename_fit_to_sim()
   }
 
-  pred_sw <- get_prediction(sinusfit = sinusfit_sw, type = "surface-water")
-  pred_gw <- get_prediction(sinusfit = sinusfit_gw, type = "groundwater")
+  pred_sw <- get_prediction(sinusfit = sinusfit_sw)
+  pred_gw <- get_prediction(sinusfit = sinusfit_gw)
 
   # predict_confidence <- function(sinusfit) {
   #   predict(sinusfit$lm_object, interval = "confidence") %>%
@@ -51,7 +53,7 @@ get_predictions <- function(sinusfit_sw, sinusfit_gw, retardation_factor = 2)
   rename_right_join <- function(sinusfit, pred) {
     sinusfit$data %>%
       dplyr::rename(observed = .data$value) %>%
-      dplyr::right_join(pred, by = c("type", "date"))
+      dplyr::right_join(pred, by = c("type", "monitoring_id", "label", "date"))
   }
 
   dat <- dplyr::bind_rows(
