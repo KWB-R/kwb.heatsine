@@ -11,92 +11,81 @@
 #' @importFrom dplyr bind_cols
 #' @importFrom stats predict
 #'
-get_predictions <- function(sinusfit_sw,
-                            sinusfit_gw,
-                            retardation_factor = 2) {
-
-
+get_predictions <- function(sinusfit_sw, sinusfit_gw, retardation_factor = 2)
+{
   ### Use "prediction" intervall (uncertainty of single value)
   ### Reference: http://www.sthda.com/english/articles/40-regression-analysis/166-predict-in-r-model-predictions-and-confidence-intervals/
 
-  day_numbers_sw <- seq_len(sinusfit_sw$paras$period_length) - 1
-  dates_sw <- min(sinusfit_sw$data$date, na.rm = TRUE) + day_numbers_sw
+  rename_fit_to_sim <- function(df) dplyr::rename(df, simulated = "fit")
 
-  pred_sw <- dplyr::bind_cols(
-    tibble::tibble(
-      type = "surface-water",
-      date = dates_sw
-    ),
-    stats::predict(sinusfit_sw$lm_object,
-      newdata = data.frame(day_number = day_numbers_sw),
-      interval = "prediction"
+  get_prediction <- function(sinusfit) {
+
+    period_length <- sinusfit$paras$period_length
+    day_numbers <- seq_len(period_length) - 1L
+
+    data.frame(
+      type = sinusfit$metadata$type,
+      monitoring_id = sinusfit$metadata$monitoring_id,
+      label = sinusfit$metadata$label,
+      date = min(sinusfit$data$date, na.rm = TRUE) + day_numbers,
+      simulate(
+        model = sinusfit$lm_object,
+        day_number = day_numbers,
+        period_length = period_length,
+        interval = "prediction"
+      )
     ) %>%
-      as.data.frame()
-  ) %>%
-    dplyr::rename(simulated = "fit") %>%
-    dplyr::mutate(date = dates_sw)
+      rename_fit_to_sim()
+  }
 
-  day_numbers_gw <- seq_len(sinusfit_gw$paras$period_length) - 1
-  dates_gw <- min(sinusfit_gw$data$date, na.rm = TRUE) + day_numbers_gw
+  pred_sw <- get_prediction(sinusfit = sinusfit_sw)
+  pred_gw <- get_prediction(sinusfit = sinusfit_gw)
 
-  pred_gw <- dplyr::bind_cols(
-    tibble::tibble(
-      type = "groundwater",
-      date = dates_gw
-    ),
-    stats::predict(sinusfit_gw$lm_object,
-      newdata = data.frame(day_number = day_numbers_gw),
-      interval = "prediction"
-    ) %>%
-      as.data.frame()
-  ) %>%
-    dplyr::rename(simulated = "fit")
-
-  # ci_sw <- predict(sinusfit_sw$lm_object, interval = "confidence") %>%
-  #   as.data.frame() %>%
-  #   dplyr::rename(simulated = "fit")
+  # predict_confidence <- function(sinusfit) {
+  #   predict(sinusfit$lm_object, interval = "confidence") %>%
+  #     as.data.frame() %>%
+  #     rename_fit_to_sim()
+  # }
   #
-  #
-  # ci_gw <- predict(sinusfit_gw$lm_object, interval = "confidence") %>%
-  #   as.data.frame() %>%
-  #   dplyr::rename(simulated = "fit")
+  # ci_sw <- predict_confidence(sinusfit = sinusfit_sw)
+  # ci_gw <- predict_confidence(sinusfit = sinusfit_gw)
 
-  dat <- sinusfit_sw$data %>%
-    dplyr::rename(observed = .data$value) %>%
-    dplyr::right_join(pred_sw, by = c("type", "date")) %>%
-    dplyr::bind_rows(sinusfit_gw$data %>%
+  rename_right_join <- function(sinusfit, pred) {
+    sinusfit$data %>%
       dplyr::rename(observed = .data$value) %>%
-      dplyr::right_join(pred_gw, by = c("type", "date"))) %>%
+      dplyr::right_join(pred, by = c("type", "monitoring_id", "label", "date"))
+  }
+
+  dat <- dplyr::bind_rows(
+    rename_right_join(sinusfit = sinusfit_sw, pred = pred_sw),
+    rename_right_join(sinusfit = sinusfit_gw, pred = pred_gw)
+  ) %>%
     dplyr::rename(
       simulated_pi_lower = .data$lwr,
       simulated_pi_upper = .data$upr
     )
 
-  res_opti_paras <- dplyr::bind_rows(list(
-    `surface-water` = sinusfit_sw$paras,
-    groundwater = sinusfit_gw$paras
-  ),
-  .id = "type"
-  )
-
-
-
-  res_opti_gof <- dplyr::bind_rows(list(
-    `surface-water` = sinusfit_sw$gof,
-    groundwater = sinusfit_gw$gof
-  ),
-  .id = "type"
-  )
-
-  res_opti_traveltimes <- get_travel_time(sinusfit_sw,
-    sinusfit_gw,
-    retardation_factor = retardation_factor
-  )
+  bind_rows_with_type <- function(sw, gw) {
+    dplyr::bind_rows(.id = "type", list(
+      `surface-water` = sw,
+      groundwater = gw
+    ))
+  }
 
   list(
     data = dat,
-    paras = res_opti_paras,
-    gof = res_opti_gof,
-    traveltimes = res_opti_traveltimes
+    paras = bind_rows_with_type(
+      sw = sinusfit_sw$paras,
+      gw = sinusfit_gw$paras
+    ),
+    gof = bind_rows_with_type(
+      sw = sinusfit_sw$gof,
+      gw = sinusfit_gw$gof
+    ),
+    traveltimes = get_travel_time(
+      sinusfit_sw,
+      sinusfit_gw,
+      retardation_factor = retardation_factor
+    )
   )
 }

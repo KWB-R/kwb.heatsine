@@ -7,7 +7,8 @@
 get_tidy_traveltimes(traveltimes)
 }
 \arguments{
-\item{traveltimes}{traveltimes object as retrieved by \code{\link{get_predictions}}}
+\item{traveltimes}{traveltimes object as retrieved by
+\code{\link{get_predictions}}}
 }
 \value{
 data frame with tidy traveltimes

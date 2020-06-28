@@ -1,5 +1,4 @@
 # get_path_to_excel_file -------------------------------------------------------
-
 get_path_to_excel_file <- function(data_dir, pattern = "^Temperatur.*\\.xlsx$")
 {
   xls_files <- dir(data_dir, pattern, full.names = TRUE)
@@ -8,7 +7,6 @@ get_path_to_excel_file <- function(data_dir, pattern = "^Temperatur.*\\.xlsx$")
 
   xls_files[[1L]]
 }
-
 
 # load_temperature_from_excel --------------------------------------------------
 load_temperature_from_excel <- function(dir_path = "~/../Downloads/kwb-cloud/projects/smart-control")

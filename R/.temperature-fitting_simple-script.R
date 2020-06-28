@@ -16,16 +16,21 @@
 # kwb.utils::sourceScripts(
 #   dir("R", pattern = "^\\.", recursive = TRUE, full.names = TRUE)
 # )
+
+# Load the pipe operator
+`%>%` <- magrittr::`%>%`
+
 # MAIN -------------------------------------------------------------------------
 if (FALSE)
 {
-
-  `%>%` <- magrittr::`%>%`
   #############################################################################
   ### 1. Data preparation (example data sets for ground- and surface water)
 
-  # 1.1 Load temperature from Excel file (file: "Temperatur_in_Br _und_GWM_für_KWB.xlsx" needed!)
-  temp <- load_temperature_from_excel(dir_path = "~/../Downloads/kwb-cloud/projects/smart-control/")
+  # 1.1 Load temperature from Excel file
+  # (file: "Temperatur_in_Br _und_GWM_für_KWB.xlsx" needed!)
+  temp <- load_temperature_from_excel(
+    dir_path = "~/../Downloads/kwb-cloud/projects/smart-control/"
+  )
 
   filter_rename_select <- function(df, name) {
     df %>%
@@ -39,18 +44,25 @@ if (FALSE)
 
   kwb.utils::createDirectory("csv")
 
-  readr::write_csv(data_sw, path = "inst/extdata/temperature_surface-water_TEGsee-mikrosieb.csv")
-  readr::write_csv(data_gw, path = "inst/extdata/temperature_groundwater_TEG343.csv")
+  write_local_csv <- function(df, file_base) {
+    readr::write_csv(df, sprintf("inst/extdata/%s.csv", file_base))
+  }
+
+  write_local_csv(data_sw, "temperature_surface-water_TEGsee-mikrosieb")
+  write_local_csv(data_gw, "temperature_groundwater_TEG343")
 
   ####################################################################
   ### 2. Interactively plot & select data
 
-  path_csv_sw <- kwb.heatsine::extdata_file("temperature_surface-water_TEGsee-mikrosieb.csv")
-  path_csv_gw <- kwb.heatsine::extdata_file("temperature_groundwater_TEG343.csv")
+  load_temp <- function(file_base) {
+    kwb.heatsine::load_temperature_from_csv(
+      kwb.heatsine::extdata_file(paste0(file_base, ".csv"))
+    )
+  }
 
   ### Interactively select time period
-  data_sw <- kwb.heatsine::load_temperature_from_csv(path_csv_sw)
-  data_gw <- kwb.heatsine::load_temperature_from_csv(path_csv_gw)
+  data_sw <- load_temp("temperature_surface-water_TEGsee-mikrosieb")
+  data_gw <- load_temp("temperature_groundwater_TEG343")
 
   # 2.1 Surface water
 
@@ -66,15 +78,15 @@ if (FALSE)
     date_end = "2016-10-14"
   )
 
-  kwb.heatsine::plot_temperature_interactive(df = data_sw_selected)
-
   data_gw_selected <- kwb.heatsine::select_timeperiod(
     data_gw,
     date_start = "2015-12-28",
     date_end = "2016-12-26"
   )
 
-  plot_temperature_interactive(df = data_gw_selected)
+
+  kwb.heatsine::plot_temperature_interactive(df = data_sw_selected)
+  kwb.heatsine::plot_temperature_interactive(df = data_gw_selected)
 
   ####################################################################
   ### 3. Optimise sinus fit (surface water and groundwater)
@@ -82,12 +94,16 @@ if (FALSE)
   tolerance <- 0.001 # the desired accuracy ()
   debug <- TRUE
 
-  sinusfit_sw <- kwb.heatsine::optimise_sinus_variablePeriod(
-    temp_df = data_sw_selected,
-    opt_limits = limits,
-    opt_tolerance = tolerance,
-    opt_debug = debug
-  )
+  do_sinus_optimisation <- function(temp_df) {
+    kwb.heatsine::optimise_sinus_variablePeriod(
+      temp_df = temp_df,
+      opt_limits = limits,
+      opt_tolerance = tolerance,
+      opt_debug = debug
+    )
+  }
+
+  sinusfit_sw <- do_sinus_optimisation(temp_df = data_sw_selected)
 
   # Check results
   # y0 <- sinusfit_sw$paras$y0
@@ -107,12 +123,7 @@ if (FALSE)
   # }
   #
 
-  sinusfit_gw <- kwb.heatsine::optimise_sinus_variablePeriod(
-    temp_df = data_gw_selected,
-    opt_limits = limits,
-    opt_tolerance = tolerance,
-    opt_debug = debug
-  )
+  sinusfit_gw <- do_sinus_optimisation(temp_df = data_gw_selected)
 
   ####################################################################
   ### 4. Results
@@ -151,26 +162,46 @@ if (FALSE)
   ## Export plots:
   kwb.utils::createDirectory("plots")
 
-  plot_to_html <- function(df, file_base) {
-    plot_temperature_interactive(df) %>%
-      htmlwidgets::saveWidget(paste0(file_base, ".html"))
+  plot_to_html <- function(p, file_base) {
+    htmlwidgets::saveWidget(p, paste0(file_base, ".html"))
   }
 
   withr::with_dir(new = "plots", code = {
 
-    plot_to_html(data_sw, "temperature_surface-water_time-series_full")
-    plot_to_html(data_sw_selected, "temperature_surface-water_time-series_selected")
-    plot_to_html(data_gw, "temperature_groundwater_time-series_full")
-    plot_to_html(data_gw_selected, "temperature_groundwater_time-series_selected")
-    plot_to_html(predictions, "temperature_prediction")
+    plot_to_html(
+      plot_temperature_interactive(data_sw),
+      "temperature_surface-water_time-series_full"
+    )
 
-    # plot_residuals_interactive(prediction_df, binwidth = 0.5) %>%
-    #   htmlwidgets::saveWidget("temperature_prediction_residuals.html")
+    plot_to_html(
+      plot_temperature_interactive(data_sw_selected),
+      "temperature_surface-water_time-series_selected"
+    )
+
+    plot_to_html(
+      plot_temperature_interactive(data_gw),
+      "temperature_groundwater_time-series_full"
+    )
+
+    plot_to_html(
+      plot_temperature_interactive(data_gw_selected),
+      "temperature_groundwater_time-series_selected"
+    )
+
+    plot_to_html(
+      plot_prediction_interactive(predictions),
+      "temperature_prediction"
+    )
+
+    # plot_to_html(
+    #   plot_residuals_interactive(prediction_df, binwidth = 0.5),
+    #   "temperature_prediction_residuals"
+    # )
   })
 }
 
 ### Test Monte Carlo
-if(FALSE)
+if (FALSE)
 {
   res_sw <- run_montecarlo(sinus_fit_list = sinusfit_sw, nMC = 1000)
   res_gw <- run_montecarlo(sinus_fit_list = sinusfit_gw, nMC = 1000)
@@ -185,21 +216,18 @@ if(FALSE)
 
   plotly::ggplotly(g)
 
-  mr_sw <- res_sw %>%
-    dplyr::select(run_id, day_number, y_r_plus_sigma_r) %>%
-    dplyr::group_by(run_id) %>%
-    dplyr::summarise(
-      min = which.min(y_r_plus_sigma_r),
-      max = which.max(y_r_plus_sigma_r)
-    )
+  get_range_per_run <- function(df) {
+    df %>%
+      dplyr::select(.data$run_id, .data$day_number, .data$y_r_plus_sigma_r) %>%
+      dplyr::group_by(.data$run_id) %>%
+      dplyr::summarise(
+        min = which.min(.data$y_r_plus_sigma_r),
+        max = which.max(.data$y_r_plus_sigma_r)
+      )
+  }
 
-  mr_gw <- res_gw %>%
-    dplyr::select(run_id, day_number, y_r_plus_sigma_r) %>%
-    dplyr::group_by(run_id) %>%
-    dplyr::summarise(
-      min = which.min(y_r_plus_sigma_r),
-      max = which.max(y_r_plus_sigma_r)
-    )
+  mr_sw <- get_range_per_run(res_sw)
+  mr_gw <- get_range_per_run(res_gw)
 
   hist(mr_sw$min)
 

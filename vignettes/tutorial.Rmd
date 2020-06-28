@@ -1,0 +1,267 @@
+---
+title: "Tutorial"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Tutorial}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Installation
+
+```{r setup, eval = FALSE}
+### Optionally: specify GitHub Personal Access Token (GITHUB_PAT)
+### See here why this might be important for you:
+### https://kwb-r.github.io/kwb.pkgbuild/articles/install.html#set-your-github_pat
+
+# Sys.setenv(GITHUB_PAT = "mysecret_access_token")
+
+# Install package "remotes" from CRAN
+if (! require("remotes")) {
+  install.packages("remotes", repos = "https://cloud.r-project.org")
+}
+
+# Install KWB package 'kwb.heatsine' from GitHub
+remotes::install_github("KWB-R/kwb.heatsine")
+```
+
+# Data prerequisites 
+
+The sinus fit optimisation works for for daily time series of a surface water
+and a groundwater monitoring point, which follow the following requirements:
+
+## File naming
+
+The time series must be provided in a `.csv` (comma separated value) file, which
+follows the naming convention:
+
+temperature_`<type>`_`<monitoring_id>`.csv
+
+where `<type>` needs to be exactly `groundwater` or `surface-water`. In case any
+other value for `<type>` is chosen the program will not work (e.g `SURFACE
+WATER`). The value of the `<monitoring_id>` will be used for labeling the
+monitoring points in the plots and can be almost any value but must not contain
+`_` (underscore) or `" "` (space).
+
+## Data structure  
+
+The data structure of each `.csv` file is very simple as it contains only the
+two columns `date` (formatted: `YYYY-MM-DD`, e.g. `2020-06-23`) and `value`
+(temperature data in degree Celsius) as shown exemplary below:
+
+```{r eval = FALSE}
+date,value
+2020-06-23,12.3
+2020-06-24,12.3
+```
+
+Please make sure that both columns `date` and `value` are all lowercase and
+correctly spelled as the program will not work if this is not the case.
+
+# Data preparation
+
+## Import
+
+```{r}
+## Load the R package
+library(kwb.heatsine)
+
+load_temp <- function(base_name) {
+  kwb.heatsine::load_temperature_from_csv(
+    kwb.heatsine::extdata_file(base_name)
+  )
+}
+
+data_sw <- load_temp("temperature_surface-water_TEGsee-mikrosieb.csv")
+data_gw <- load_temp("temperature_groundwater_TEG343.csv")
+```
+
+## Visualise
+
+Plot time series for whole time period (moveover on data points to select)
+  
+### Surface water
+
+```{r}
+kwb.heatsine::plot_temperature_interactive(data_sw)
+```
+
+### Groundwater
+
+```{r}
+kwb.heatsine::plot_temperature_interactive(data_gw)
+```
+
+## Select
+
+Reduce time period to a full sinus period which is definde by the user input 
+(`date_end` is optional, if not given it is set to 'date_start' + 365.25 days).
+
+```{r}
+data_sw_selected <- kwb.heatsine::select_timeperiod(
+  data_sw, 
+  date_start = "2015-10-10",
+  date_end = "2016-10-14"
+)
+
+data_gw_selected <- kwb.heatsine::select_timeperiod(
+  data_gw,
+  date_start = "2015-12-28",
+  date_end = "2016-12-26"
+)
+```
+
+Plot selected datasets:
+
+### Surface Water (selected)
+
+```{r}
+kwb.heatsine::plot_temperature_interactive(df = data_sw_selected)
+```
+
+### Grundwater (selected)
+
+```{r}
+kwb.heatsine::plot_temperature_interactive(df = data_gw_selected)
+```
+
+# Sinus optimisation 
+
+
+## Run
+
+Sinus fit operation is performed by minimizing the RMSE error between observed 
+and simulated temperature curves.
+
+```{r}
+limits <- c(100, 500) # minimum/maximum period length
+tolerance <- 0.001 # the desired accuracy ()
+debug <- TRUE
+
+# Helper function to do the sinus optimisation
+do_sinus_optimisation <- function(temp_df) {
+  kwb.heatsine::optimise_sinus_variablePeriod(
+    temp_df = temp_df,
+    opt_limits = limits,
+    opt_tolerance = tolerance,
+    opt_debug = debug
+  )
+}
+
+sinusfit_sw <- do_sinus_optimisation(temp_df = data_sw_selected)
+sinusfit_gw <- do_sinus_optimisation(temp_df = data_gw_selected)
+
+# Generate data frame with simulated and observed values
+predictions <- kwb.heatsine::get_predictions(
+  sinusfit_sw = sinusfit_sw, 
+  sinusfit_gw = sinusfit_gw, 
+  retardation_factor = 1.8
+)
+```
+
+## Analyse
+
+### Interactive Plot
+
+```{r}
+kwb.heatsine::plot_prediction_interactive(predictions)
+```
+
+### Table: Traveltimes
+```{r}
+knitr::kable(predictions$traveltimes)
+```
+
+### Table: Goodness of Fit 
+
+While only RMSE is used for optimising the sinus fit, a number of goodness-of-fit 
+parameters is also calculated and shown in the table below. For details on each 
+of these parameters the use is referred to the function `hydroGOF::gof()` which is 
+used for calculating all these values.
+
+```{r}
+knitr::kable(predictions$gof)
+```
+
+### Table: Optimisation Parameters
+
+```{r}
+knitr::kable(predictions$paras)
+```
+
+### Table: Data
+
+```{r}
+# only first entries
+knitr::kable(head(predictions$data))
+```
+
+## Export 
+
+Export results to `csv`:
+
+```{r eval = FALSE}
+write_to_csv <- function(df, file_base) {
+  readr::write_csv(df, path = file.path(
+    kwb.utils::createDirectory("csv"), paste0(file_base, ".csv")
+  ))
+}
+
+get_residuals <- function(df) {
+  data.frame(residuals = df$simulated - df$observed)
+}
+
+write_to_csv(predictions$data, "sinus-fit_predictions")
+write_to_csv(predictions$paras, "sinus-fit_parameters")
+write_to_csv(predictions$gof, "sinus-fit_goodness-of-fit")
+write_to_csv(predictions$traveltimes, "sinus-fit_traveltimes")
+write_to_csv(get_residuals(predictions$data), "sinus-fit_residuals")
+
+## Export plots:
+
+save_to_html <- function(p, file_base) {
+  htmlwidgets::saveWidget(p, paste0(file_base, ".html"))
+}
+
+withr::with_dir(new = kwb.utils::createDirectory("plots"), code = {
+  
+  save_to_html(
+    plot_temperature_interactive(data_sw), 
+    "temperature_surface-water_time-series_full"
+  )
+  
+  save_to_html(
+    plot_temperature_interactive(data_sw_selected),
+    "temperature_surface-water_time-series_selected"
+  )
+  
+  save_to_html(
+    plot_temperature_interactive(data_gw), 
+    "temperature_groundwater_time-series_full"
+  )
+  
+  save_to_html(
+    plot_temperature_interactive(data_gw_selected),
+    "temperature_groundwater_time-series_selected"
+  )
+  
+  save_to_html(
+    plot_prediction_interactive(predictions), 
+    "temperature_prediction"
+  )
+  
+  # save_to_html(
+  #   plot_residuals_interactive(prediction_df, binwidth = 0.5),
+  #   "temperature_prediction_residuals"
+  # )
+})  
+```
