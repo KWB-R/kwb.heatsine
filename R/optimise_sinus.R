@@ -18,11 +18,13 @@ optimise_sinus_fixedPeriod <- function(df, period_length = 365.25)
 {
   metadata <- attributes(df)
 
-  df <- tibble::tibble(
+  backbone <- tibble::tibble(
     type = metadata$type,
     monitoring_id = metadata$monitoring_id,
     label = metadata$label
-  ) %>%
+  )
+
+  df <- backbone %>%
     dplyr::bind_cols(df) %>%
     dplyr::arrange(.data$date)
 
@@ -32,25 +34,20 @@ optimise_sinus_fixedPeriod <- function(df, period_length = 365.25)
     by = "days"
   )
 
-  dates_all <- tibble::tibble(
-    type = metadata$type,
-    monitoring_id = metadata$monitoring_id,
-    label = metadata$label,
-    date = day_seq_from_range(rng = range(df$date, na.rm = TRUE))
-  )
+  dates_all <- backbone %>%
+    dplyr::bind_cols(tibble::tibble(
+      date = day_seq_from_range(rng = range(df$date, na.rm = TRUE))
+    ))
 
   df <- df %>%
-    dplyr::right_join(dates_all, by = c(
-      "type", "monitoring_id", "label", "date"
-    )) %>%
+    dplyr::right_join(dates_all, by = c(names(backbone), "date")) %>%
     dplyr::arrange(.data$date)
 
   df$day_number <- as.numeric(df$date - df$date[1])
 
   fit.lm2 <- stats::lm(
-    value ~ sin(2 * pi * day_number / period_length) +
-      cos(2 * pi * day_number / period_length),
-    data = df
+    value ~ sin(phi) + cos(phi),
+    data = add_phi(df, period_length)
   )
 
   # summary(fit.lm2)
@@ -64,9 +61,9 @@ optimise_sinus_fixedPeriod <- function(df, period_length = 365.25)
 
   paras <- tibble::tibble(
     period_length = period_length,
-    alpha = coeffs[2L],
-    beta = coeffs[3L],
-    y0 = coeffs[1L],
+    alpha = coeffs[2L], # sin(phi)
+    beta = coeffs[3L], # cos(phi)
+    y0 = coeffs[1L], # Intercept
     a = sqrt(alpha^2 + beta^2),
     x0 = atan2(beta, alpha)
   )
@@ -99,9 +96,7 @@ optimise_sinus_fixedPeriod <- function(df, period_length = 365.25)
     label = metadata$label,
     date = c(date_max, date_min),
     day_number = as.integer(df$day_number[1] + date - df$date[1]),
-    simulated = predict(
-      fit.lm2, newdata = tibble::tibble(day_number = day_number)
-    ),
+    simulated = simulate(fit.lm2, day_number, period_length),
     point_type = c("max", "min")
   ) %>%
     left_join_day_number_value(df)
@@ -117,7 +112,7 @@ optimise_sinus_fixedPeriod <- function(df, period_length = 365.25)
     ) %>%
       as.Date(),
     day_number = as.integer(df$day_number[1] + .data$date - df$date[1]),
-    simulated = predict(fit.lm2, newdata = tibble::tibble(day_number = day_number))
+    simulated = simulate(fit.lm2, day_number, period_length)
   ) %>%
     left_join_day_number_value(df)
 
