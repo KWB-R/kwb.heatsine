@@ -25,12 +25,24 @@ if (FALSE)
 {
   #############################################################################
   ### 1. Data preparation (example data sets for ground- and surface water)
+  xls_dir <- "~/../Downloads/kwb-cloud/projects/smart-control/"
 
   # 1.1 Load temperature from Excel file
   # (file: "Temperatur_in_Br _und_GWM_für_KWB.xlsx" needed!)
   temp <- load_temperature_from_excel(
-    dir_path = "~/../Downloads/kwb-cloud/projects/smart-control/"
+    dir_path = xls_dir
   )
+
+
+  ophours <- load_operatinghours_from_excel(dir_path = xls_dir)
+
+  temp_ophours <- temp %>%
+    dplyr::left_join(ophours) %>%
+    dplyr::filter(!grepl("TEGsee|SPAowa", .data$Name_Messstelle),
+                  grepl("^TEG", .data$Name_Messstelle),
+                  .data$Betriebsstunden == 24) %>%
+    dplyr::filter(.data$PN_Datum >= as.Date("2016-01-01")) #before no full year with data for TEGsee-mikrosiebO
+
 
   filter_rename_select <- function(df, name) {
     df %>%
@@ -39,8 +51,10 @@ if (FALSE)
       dplyr::select(date, value)
   }
 
+
   data_sw <- filter_rename_select(temp, "TEGsee-mikrosiebO")
   data_gw <- filter_rename_select(temp, "TEG343")
+
 
   kwb.utils::createDirectory("csv")
 
@@ -50,6 +64,15 @@ if (FALSE)
 
   write_local_csv(data_sw, "temperature_surface-water_TEGsee-mikrosieb")
   write_local_csv(data_gw, "temperature_groundwater_TEG343")
+
+  pwells <- unique(temp_ophours$Name_Messstelle)
+
+  sapply(pwells, function(pwell) {
+    pwell_file <- sprintf("temperature_groundwater_%s", sub("-?/.*", "", pwell))
+    data_pw <- filter_rename_select(temp_ophours, pwell)
+    write_local_csv(data_pw, pwell_file)
+
+  })
 
   ####################################################################
   ### 2. Interactively plot & select data
