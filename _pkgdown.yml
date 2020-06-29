@@ -8,6 +8,8 @@ authors:
 template:
   params:
     bootswatch: cerulean
+    docsearch:
+      api_key: 758310250dc130bbb542e81bfb6c0f7b
+      index_name: kwb_heatsine
 development:
   mode: auto
-
