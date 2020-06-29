@@ -71,6 +71,16 @@ correctly spelled as the program will not work if this is not the case.
 
 ## Import
 
+The R package includes the following temporal times series data for testing:
+
+```{r}
+list.files(kwb.heatsine::extdata_file())
+```
+
+In this the example the files `temperature_surface-water_TEGsee-mikrosieb.csv` 
+and `temperature_groundwater_TEG343.csv` are used for testing the functionality
+and imported by using the code below: 
+
 ```{r}
 ## Load the R package
 library(kwb.heatsine)
