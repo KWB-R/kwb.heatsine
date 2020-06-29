@@ -1,8 +1,8 @@
 ---
-title: "Tutorial (TEG343)"
+title: "Test (TEGbaum06)"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Tutorial (TEG343)}
+  %\VignetteIndexEntry{Test (TEGbaum06)}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -92,7 +92,7 @@ load_temp <- function(base_name) {
 }
 
 data_sw <- load_temp("temperature_surface-water_TEGsee-mikrosieb.csv")
-data_gw <- load_temp("temperature_groundwater_TEG343.csv")
+data_gw <- load_temp("temperature_groundwater_TEGbaum06.csv")
 ```
 
 ## Visualise
@@ -125,8 +125,8 @@ data_sw_selected <- kwb.heatsine::select_timeperiod(
 
 data_gw_selected <- kwb.heatsine::select_timeperiod(
   data_gw,
-  date_start = "2015-12-28",
-  date_end = "2016-12-26"
+  date_start = "2015-12-10",
+  date_end = "2017-01-15"
 )
 ```
 
