@@ -100,6 +100,7 @@ plot_prediction_interactive <- function(predictions)
       data = traveltimes_tidy, mapping = ggplot2::aes(
        x = .data$date,
        y = .data$simulated,
+       #fill = "lower: 5%, upper: 95%",
        col = .data$point_type
       ),
       size = 3,
@@ -132,7 +133,8 @@ plot_prediction_interactive <- function(predictions)
     # ) +
     #ggplot2::theme_bw() +
     #ggplot2::theme(axis.title.y = ggplot2::element_text(vjust = 0)) +
-    ggplot2::guides(col = ggplot2::guide_legend(title="Legend"))
+    ggplot2::guides(#fill = ggplot2::guide_legend(title="Prediction interval"),
+                    col = ggplot2::guide_legend(title="Data points"))
 
 
   plotly::ggplotly(g1)
