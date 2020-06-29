@@ -6,7 +6,7 @@
 #' @param retardation_factor hydraulic retardation factor (default: 2)
 #'
 #' @return list with sim/observation data ("data") fit parameters ("paras"), goodness-of-fit values ("gof")
-#' and traveltimes ("traveltimes")
+#' traveltimes ("traveltimes") and special (min, max, turning) points ("points")
 #' @export
 #' @importFrom dplyr bind_cols
 #' @importFrom stats predict
@@ -41,7 +41,9 @@ get_predictions <- function(sinusfit_sw, sinusfit_gw, retardation_factor = 2)
   pred_sw <- get_prediction(sinusfit = sinusfit_sw)
   pred_gw <- get_prediction(sinusfit = sinusfit_gw)
 
-  # predict_confidence <- function(sinusfit) {
+
+
+   # predict_confidence <- function(sinusfit) {
   #   predict(sinusfit$lm_object, interval = "confidence") %>%
   #     as.data.frame() %>%
   #     rename_fit_to_sim()
@@ -86,6 +88,7 @@ get_predictions <- function(sinusfit_sw, sinusfit_gw, retardation_factor = 2)
       sinusfit_sw,
       sinusfit_gw,
       retardation_factor = retardation_factor
-    )
+    ),
+    points =  dplyr::bind_rows(sinusfit_sw$points, sinusfit_gw$points)
   )
 }

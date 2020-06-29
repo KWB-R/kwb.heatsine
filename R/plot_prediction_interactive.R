@@ -53,6 +53,7 @@ get_tidy_traveltimes <- function(traveltimes) {
 #'
 plot_prediction_interactive <- function(predictions)
 {
+
   traveltimes_tidy <- predictions$traveltimes %>%
     get_tidy_traveltimes() %>%
     dplyr::mutate(
@@ -70,7 +71,9 @@ plot_prediction_interactive <- function(predictions)
           ""
         )
       )
-    )
+    ) %>%
+    dplyr::left_join(predictions$points[,c("point_type", "label", "date", "simulated")],
+                     by = c("point_type", "label", "date"))
 
   copy_unless_observed <- function(.data, column) {
     ifelse(.data[["temperature"]] == "observed", NA_real_, .data[[column]])
@@ -93,13 +96,16 @@ plot_prediction_interactive <- function(predictions)
     ggplot2::ggplot(ggplot2::aes_string("date", "value", col = "temperature")) +
     ggplot2::facet_wrap(~ forcats::fct_rev(.data$label), ncol = 1) +
     ggplot2::geom_line() +
-    ggplot2::geom_vline(
+    ggplot2::geom_point(
       data = traveltimes_tidy, mapping = ggplot2::aes(
-        xintercept = as.numeric(.data$date),
-        col = .data$point_type
+       x = .data$date,
+       y = .data$simulated,
+       col = .data$point_type
       ),
+      size = 3,
       alpha = 0.5,
-      show.legend = FALSE
+      show.legend = TRUE,
+      inherit.aes = FALSE
     ) +
     # ggplot2::geom_text(
     #   data = traveltimes_tidy,
@@ -120,10 +126,14 @@ plot_prediction_interactive <- function(predictions)
     ) +
     ggplot2::ylab(label = "temperature (\u00B0 C)") +
     ggplot2::scale_x_date(date_labels = "%Y/%m/%d") +
+    #ggplot2::scale_fill_identity(name = 'the fill', guide = 'legend',labels = c('m1')) +
     # ggplot2::scale_fill_manual(
     #   "", labels = c("Prediction interval"), values = c("grey")
     # ) +
-    ggplot2::theme_bw()
+    #ggplot2::theme_bw() +
+    #ggplot2::theme(axis.title.y = ggplot2::element_text(vjust = 0)) +
+    ggplot2::guides(col = ggplot2::guide_legend(title="Legend"))
+
 
   plotly::ggplotly(g1)
 }

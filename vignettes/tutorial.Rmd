@@ -1,8 +1,8 @@
 ---
-title: "Tutorial (TEG343)"
+title: "Tutorial"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Tutorial (TEG343)}
+  %\VignetteIndexEntry{Tutorial}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 

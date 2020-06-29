@@ -15,7 +15,7 @@ get_predictions(sinusfit_sw, sinusfit_gw, retardation_factor = 2)
 }
 \value{
 list with sim/observation data ("data") fit parameters ("paras"), goodness-of-fit values ("gof")
-and traveltimes ("traveltimes")
+traveltimes ("traveltimes") and special (min, max, turning) points ("points")
 }
 \description{
 Get Predictions
