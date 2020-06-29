@@ -77,7 +77,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">kwb.heatsine</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -103,7 +103,7 @@
       <a href="../articles/test.html">Test (TEGbaum06)</a>
     </li>
     <li>
-      <a href="../articles/tutorial.html">Tutorial (TEG343)</a>
+      <a href="../articles/tutorial.html">Tutorial</a>
     </li>
   </ul>
 </li>
@@ -141,6 +141,30 @@
       <small>Source: <a href='https://github.com/KWB-R/kwb.heatsine/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="kwbheatsine-011-2020-06-29" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.1">
+<a href="#kwbheatsine-011-2020-06-29" class="anchor"></a><a href="https://github.com/KWB-R/kwb.heatsine/releases/tag/v0.1.1">kwb.heatsine 0.1.1</a> <small>2020-06-29</small>
+</h1>
+<p>Added the following features as requested by <a href='https://github.com/chsprenger'>@chsprenger</a></p>
+<ul>
+<li><p><a href="https://github.com/KWB-R/kwb.heatsine/blob/123a43c1df4b79141897711180259a91250d4025/vignettes/tutorial.Rmd">Tutorial</a> vignette: do not use monitoring label in title</p></li>
+<li>
+<p>Modified <code><a href="../reference/plot_prediction_interactive.html">plot_prediction_interactive()</a></code></p>
+<ul>
+<li><p>Use <code><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">ggplot2::geom_point()</a></code> instead of <code><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">ggplot2::geom_vline()</a></code> for plotting special (min, max, turning-points)</p></li>
+<li><p>Unable to add <code>prediction interval</code> in legend due to missing functionality in function used for interactive plotting <code><a href="https://rdrr.io/pkg/plotly/man/ggplotly.html">plotly::ggplotly()</a></code> (see issue described here: <a href="https://github.com/ropensci/plotly/issues/1164" class="uri">https://github.com/ropensci/plotly/issues/1164</a>)</p></li>
+</ul>
+</li>
+</ul>
+</div>
+    <div id="kwbheatsine-010-2020-06-29" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.0">
+<a href="#kwbheatsine-010-2020-06-29" class="anchor"></a><a href="https://github.com/KWB-R/kwb.heatsine/releases/tag/v0.1.0">kwb.heatsine 0.1.0</a> <small>2020-06-29</small>
+</h1>
+<ul>
+<li>First beta-release for internal review by <a href='https://github.com/chsprenger'>@chsprenger</a></li>
+</ul>
+</div>
     <div id="kwbheatsine-0009000" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.0.9000">
 <a href="#kwbheatsine-0009000" class="anchor"></a>kwb.heatsine 0.0.0.9000</h1>
