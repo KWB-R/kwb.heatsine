@@ -146,6 +146,76 @@ kwb.heatsine::plot_temperature_interactive(df = data_gw_selected)
 
 # Sinus optimisation 
 
+## Background
+ 
+The sinus fit can not only be written as `y0 + amplitude * sin(x + phase)`, but also
+in a linear form `y0 + alpha * sin(x) + beta * cos(x)`. The latter approach is used 
+within this R package as it enables the calculation of both `amplitude` (`a`) and 
+phase (`x0`) by using R's build-in `stats:lm()` function as examplarly shown below:
+
+```{r eval = TRUE}
+
+### Generate synthetic temperature data following sine curve
+
+
+
+period_length <- 365 # assumed period length
+
+day_number <- seq_len(period_length) # daily sequence from 1 to period_length
+
+temperature <- 26.9188 + 2.123641 * sin(2*pi*day_number/period_length+0.6049163) 
+
+### print show first data points:
+tibble::tibble(day_number = day_number, temperature = temperature)
+
+
+### Now check the if both formulas yield equal results
+
+fit.lm2 <- lm(temperature ~ sin(2*pi*day_number/period_length) + cos(2*pi*day_number/period_length))
+
+coeffs <- coef(fit.lm2)
+
+y0 <- coeffs[1L] # y0 
+alpha <- coeffs[2L] # alpha = sin(phi)
+beta <- coeffs[3L]  # beta = cos(phi)
+a <- sqrt(alpha^2 + beta^2) # amplitude
+x0 <- atan2(beta, alpha) # phase t
+
+
+x <- 2*pi*day_number/period_length
+
+par(mfrow=c(1,2))
+
+### Formula option 1: y0 + amplitude * sin(x + phase)
+plot(x = day_number, 
+     y = y0 + a* sin(x + x0),
+     type = "l",
+     lty = 1,
+     lwd = 3, 
+     col = "gray",
+     main = "Overplotted Graphs", 
+     xlab = "day_number", 
+     ylab = "temperature")
+
+### Formula option 2: y0 + alpha * sin(x) + beta * cos(x)
+
+lines(x = day_number, 
+     y = y0 + alpha * sin(x) + beta * cos(x),
+     lwd=2, 
+     lty=2, 
+     col="red", 
+     )
+
+plot(x = day_number, 
+     y = y0 + a * sin(x + x0) - (y0 + alpha * sin(x) + beta * cos(x)),
+     lwd = 3, 
+     col = "gray", 
+     main = "Difference", 
+     xlab = "day_number", 
+     ylab = "temperature")
+
+```
+
 
 ## Run
 
