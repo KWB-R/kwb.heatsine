@@ -1,3 +1,10 @@
+# [kwb.heatsine 0.1.2](https://github.com/KWB-R/kwb.heatsine/releases/tag/v0.1.2) <small>2020-06-30</small>
+
+First "official" release after KWB internal review by @chsprenger
+
+* [Tutorial](https://github.com/KWB-R/kwb.heatsine/blob/de696dd15d16f7eb87376b7c270c76bfc475c458/vignettes/tutorial.Rmd): 
+added section `background` for sinus fit calculation (see: https://kwb-r.github.io/kwb.heatsine/articles/tutorial.html#background) 
+
 # [kwb.heatsine 0.1.1](https://github.com/KWB-R/kwb.heatsine/releases/tag/v0.1.1) <small>2020-06-29</small>
 
 Added the following features as requested by @chsprenger
@@ -12,7 +19,6 @@ Added the following features as requested by @chsprenger
     + Unable to add `prediction interval` in legend due to missing functionality 
     in function used for interactive plotting `plotly::ggplotly()` (see issue described here: https://github.com/ropensci/plotly/issues/1164)
 
-
 # [kwb.heatsine 0.1.0](https://github.com/KWB-R/kwb.heatsine/releases/tag/v0.1.0) <small>2020-06-29</small>
 
 * First beta-release for internal review by @chsprenger
@@ -22,5 +28,3 @@ Added the following features as requested by @chsprenger
 * Added a `NEWS.md` file to track changes to the package.
 
 * see https://style.tidyverse.org/news.html for writing a good `NEWS.md`
-
-

@@ -147,6 +147,95 @@ kwb.heatsine::plot_temperature_interactive(df = data_gw_selected)
 # Sinus optimisation 
 
 
+## Background
+ 
+According to [Cross Validated (2013)](https://stats.stackexchange.com/questions/77543/how-do-i-get-the-amplitude-and-phase-for-sine-wave-from-lm-summary)
+the sinus fit can not only be written as `y = y0 + amplitude * sin(x + phase_shift)`, but also
+in a linear form `y = y0 + alpha * sin(x) + beta * cos(x)`. The latter approach is used 
+within this R package as it enables the calculation of both `amplitude` (`a`) and 
+`phase_shift` (`x0`) by using R's build-in `stats::lm()` function as exemplary shown below:
+
+```{r eval = TRUE}
+
+### Generate synthetic temperature data following sine curve
+
+
+period_length <- 365 # assumed period length
+day_number <- seq_len(period_length) # daily sequence from 1 to period_length
+temperature <- 26.9188 + 2.123641 * sin(2 * pi * day_number / period_length + 0.6049163)
+
+x <- 2 * pi * day_number / period_length
+
+### Print first data points:
+tibble::tibble(day_number = day_number, temperature = temperature, x = x)
+
+### Now check the if both formulas yield (almost) equal results
+
+fit.lm2 <- lm(temperature ~ sin(x) + cos(x))
+
+coeffs <- coef(fit.lm2)
+
+y0 <- coeffs[1L] # y0
+alpha <- coeffs[2L] # alpha = sin(phi)
+beta <- coeffs[3L]  # beta = cos(phi)
+a <- sqrt(alpha ^ 2 + beta ^ 2) # amplitude
+x0 <- atan2(beta, alpha) # phase t
+
+### Print parameters of sinus fit
+tibble::tibble(
+  y0 = y0,
+  alpha = alpha,
+  beta = beta,
+  a = a,
+  x0 = x0
+)
+
+x <- 2 * pi * day_number / period_length
+
+par(mfrow = c(1, 2))
+
+### Formula option 1: y = y0 + amplitude * sin(x + phase)
+plot(
+  x = day_number,
+  y = y0 + a * sin(x + x0),
+  type = "l",
+  lty = 1,
+  lwd = 3,
+  col = "gray",
+  main = "Overplotted Graphs",
+  xlab = "day_number",
+  ylab = "temperature"
+)
+
+### Formula option 2: y = y0 + alpha * sin(x) + beta * cos(x)
+
+lines(
+  x = day_number,
+  y = y0 + alpha * sin(x) + beta * cos(x),
+  lwd = 2,
+  lty = 2,
+  col = "red",
+)
+
+### Check numeric differences between both approaches
+plot(
+  x = day_number,
+  y = y0 + a * sin(x + x0) - (y0 + alpha * sin(x) + beta * cos(x)),
+  lwd = 3,
+  col = "gray",
+  main = "Difference",
+  xlab = "day_number",
+  ylab = "temperature"
+)
+
+```
+
+As shown above the differences between both sinus calculation approaches are mostly 
+zero but sometimes show a minimal offset (which is close to R's floating point 
+accuracy of 10^`r .Machine$double.ulp.digits * log10(2)` , i.e. `r 10^(.Machine$double.ulp.digits * log10(2))`
+for the machine the calculation was carried out). As a consequence the second 
+approach can and will be used for sinus fitting within this R package. 
+
 ## Run
 
 Sinus fit operation is performed by minimizing the RMSE error between observed 
