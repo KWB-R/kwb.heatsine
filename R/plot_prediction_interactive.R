@@ -134,7 +134,8 @@ plot_prediction_interactive <- function(predictions)
     #ggplot2::theme_bw() +
     #ggplot2::theme(axis.title.y = ggplot2::element_text(vjust = 0)) +
     ggplot2::guides(#fill = ggplot2::guide_legend(title="Prediction interval"),
-                    col = ggplot2::guide_legend(title="Data points"))
+                    col = ggplot2::guide_legend(title="Data points")) +
+    ggplot2::theme_bw()
 
 
   plotly::ggplotly(g1)
