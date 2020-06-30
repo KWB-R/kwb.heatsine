@@ -365,7 +365,7 @@ withr::with_dir(new = kwb.utils::createDirectory("plots"), code = {
 })  
 ```
 
-# 7 Session Info 
+# Session Info 
 
 ## Plattform
 
