@@ -1,3 +1,13 @@
+# [kwb.heatsine 0.1.3](https://github.com/KWB-R/kwb.heatsine/releases/tag/v0.1.3) <small>2020-06-30</small>
+
+* Fix version (last release still had "development" version 0.1.1.9000)
+
+* Tutorial vignette
+    
+    + Fix typo (https://github.com/KWB-R/kwb.heatsine/commit/85981741ce9c62314d728d50992b21626b8432a0#diff-a28523db019dca3cb3eaab6cda57fe4d)
+    
+    + Add section `sessioninfo::session_info()` for reproducibility
+
 # [kwb.heatsine 0.1.2](https://github.com/KWB-R/kwb.heatsine/releases/tag/v0.1.2) <small>2020-06-30</small>
 
 First "official" release after KWB internal review by @chsprenger
