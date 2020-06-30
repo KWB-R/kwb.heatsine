@@ -232,7 +232,7 @@ plot(
 
 As shown above the differences between both sinus calculation approaches are mostly 
 zero but sometimes show a minimal offset (which is close to R's floating point 
-accuracy of 10^`r .Machine$double.ulp.digits * log10(2)`,i.e. `r 10^.Machine$double.ulp.digits * log10(2)`
+accuracy of 10^`r .Machine$double.ulp.digits * log10(2)` , i.e. `r 10^(.Machine$double.ulp.digits * log10(2))`
 for the machine the calculation was carried out). As a consequence the second 
 approach can and will be used for sinus fitting within this R package. 
 
