@@ -3,6 +3,7 @@
 [![codecov](https://codecov.io/github/KWB-R/kwb.heatsine/branch/master/graphs/badge.svg)](https://codecov.io/github/KWB-R/kwb.heatsine)
 [![Project Status](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/kwb.heatsine)]()
+[![DOI](https://zenodo.org/badge/274332678.svg)](https://zenodo.org/badge/latestdoi/274332678)
 
 Requires daily temperature times series in a
 surface water body and one groundwater observation well (in case of an

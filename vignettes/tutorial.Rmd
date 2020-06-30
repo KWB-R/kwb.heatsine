@@ -36,7 +36,7 @@ remotes::install_github("KWB-R/kwb.heatsine")
 
 # Data prerequisites 
 
-The sinus fit optimisation works for for daily time series of a surface water
+The sinus fit optimisation works for daily time series of a surface water
 and a groundwater monitoring point, which follow the following requirements:
 
 ## File naming
@@ -364,3 +364,29 @@ withr::with_dir(new = kwb.utils::createDirectory("plots"), code = {
   # )
 })  
 ```
+
+# Session Info 
+
+## Plattform
+
+```{r plattform, eval = TRUE, echo= FALSE}
+environment <- sessioninfo::session_info()  
+knitr::kable(tibble::enframe(unlist(environment$platform)))
+```
+
+## Packages
+
+```{r packages, eval = TRUE, echo= FALSE}
+environment$packages
+```
+
+### Pandoc
+
+```{r pandoc, eval = TRUE, echo= FALSE}
+if(rmarkdown::pandoc_available()) {
+data.frame(pandoc_directory = rmarkdown::pandoc_exec(),
+           pandoc_version = as.character(rmarkdown::pandoc_version()), 
+           stringsAsFactors = FALSE)
+} else {
+  print("No PANDOC installed!")
+}
