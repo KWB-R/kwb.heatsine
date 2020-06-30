@@ -146,12 +146,13 @@ kwb.heatsine::plot_temperature_interactive(df = data_gw_selected)
 
 # Sinus optimisation 
 
+
 ## Background
  
 The sinus fit can not only be written as `y = y0 + amplitude * sin(x + phase)`, but also
 in a linear form `y = y0 + alpha * sin(x) + beta * cos(x)`. The latter approach is used 
 within this R package as it enables the calculation of both `amplitude` (`a`) and 
-phase (`x0`) by using R's build-in `stats:lm()` function as examplarly shown below:
+`phase shift` (`x0`) by using R's build-in `stats::lm()` function as exemplary shown below:
 
 ```{r eval = TRUE}
 
@@ -159,22 +160,17 @@ phase (`x0`) by using R's build-in `stats:lm()` function as examplarly shown bel
 
 
 period_length <- 365 # assumed period length
-day_number <-
-  seq_len(period_length) # daily sequence from 1 to period_length
-temperature <-
-  26.9188 + 2.123641 * sin(2 * pi * day_number / period_length + 0.6049163)
+day_number <- seq_len(period_length) # daily sequence from 1 to period_length
+temperature <- 26.9188 + 2.123641 * sin(2 * pi * day_number / period_length + 0.6049163)
+
+x <- 2 * pi * day_number / period_length
 
 ### Print first data points:
 tibble::tibble(day_number = day_number, temperature = temperature)
 
+### Now check the if both formulas yield (almost) equal results
 
-### Now check the if both formulas yield equal results
-
-fit.lm2 <-
-  lm(
-    temperature ~ sin(2 * pi * day_number / period_length) + cos(2 * pi * day_number /
-                                                                   period_length)
-  )
+fit.lm2 <- lm(temperature ~ sin(x) + cos(x))
 
 coeffs <- coef(fit.lm2)
 
