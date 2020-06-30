@@ -36,7 +36,7 @@ remotes::install_github("KWB-R/kwb.heatsine")
 
 # Data prerequisites 
 
-The sinus fit optimisation works for for daily time series of a surface water
+The sinus fit optimisation works for daily time series of a surface water
 and a groundwater monitoring point, which follow the following requirements:
 
 ## File naming
