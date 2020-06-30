@@ -149,7 +149,8 @@ kwb.heatsine::plot_temperature_interactive(df = data_gw_selected)
 
 ## Background
  
-The sinus fit can not only be written as `y = y0 + amplitude * sin(x + phase)`, but also
+According to [Cross Validated, 2013](https://stats.stackexchange.com/questions/77543/how-do-i-get-the-amplitude-and-phase-for-sine-wave-from-lm-summary)
+the sinus fit can not only be written as `y = y0 + amplitude * sin(x + phase)`, but also
 in a linear form `y = y0 + alpha * sin(x) + beta * cos(x)`. The latter approach is used 
 within this R package as it enables the calculation of both `amplitude` (`a`) and 
 `phase shift` (`x0`) by using R's build-in `stats::lm()` function as exemplary shown below:
