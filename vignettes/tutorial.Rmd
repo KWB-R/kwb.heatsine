@@ -167,7 +167,7 @@ temperature <- 26.9188 + 2.123641 * sin(2 * pi * day_number / period_length + 0.
 x <- 2 * pi * day_number / period_length
 
 ### Print first data points:
-tibble::tibble(day_number = day_number, temperature = temperature)
+tibble::tibble(day_number = day_number, temperature = temperature, x = x)
 
 ### Now check the if both formulas yield (almost) equal results
 
