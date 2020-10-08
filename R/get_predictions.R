@@ -65,7 +65,18 @@ get_predictions <- function(sinusfit_sw, sinusfit_gw, retardation_factor = 2)
     dplyr::rename(
       simulated_pi_lower = .data$lwr,
       simulated_pi_upper = .data$upr
-    )
+    ) %>%
+    dplyr::mutate(residuals = .data$observed - .data$simulated) %>%
+    dplyr::select(.data$type,
+                  .data$monitoring_id,
+                  .data$label,
+                  .data$date,
+                  .data$observed,
+                  .data$simulated,
+                  .data$residuals,
+                  .data$simulated_pi_lower,
+                  .data$simulated_pi_upper)
+
 
   bind_rows_with_type <- function(sw, gw) {
     dplyr::bind_rows(.id = "type", list(
