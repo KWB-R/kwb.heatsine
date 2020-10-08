@@ -106,6 +106,9 @@
     <li>
       <a href="../articles/tutorial.html">Tutorial</a>
     </li>
+    <li>
+      <a href="../articles/wrapper.html">Wrapper</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -147,13 +150,13 @@
     <p>Optimise Sinus Fit for Variable Period</p>
     </div>
 
-    <pre class="usage"><span class='fu'>optimise_sinus_variablePeriod</span>(
-  <span class='no'>temp_df</span>,
-  <span class='kw'>optFunc</span> <span class='kw'>=</span> <span class='no'>opt_func</span>,
-  <span class='kw'>opt_limits</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>100</span>, <span class='fl'>500</span>),
-  <span class='kw'>opt_tolerance</span> <span class='kw'>=</span> <span class='fl'>0.001</span>,
-  <span class='kw'>opt_debug</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>optimise_sinus_variablePeriod</span><span class='op'>(</span>
+  <span class='va'>temp_df</span>,
+  optFunc <span class='op'>=</span> <span class='va'>opt_func</span>,
+  opt_limits <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>100</span>, <span class='fl'>500</span><span class='op'>)</span>,
+  opt_tolerance <span class='op'>=</span> <span class='fl'>0.001</span>,
+  opt_debug <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -206,7 +209,7 @@ special points, i.e. min/max/turning-points ("points), fit model
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
