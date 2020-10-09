@@ -1,3 +1,14 @@
+#' Helper function: check if Date
+#'
+#' @param x object to be checked
+#'
+#' @return TRUE (if Date) FALSE (if not Date)
+#' @keywords internal
+#' @noRd
+#'
+is.date <- function(x) {
+  inherits(x, 'Date')
+}
 
 #' Wrapper function for sinus optimisation
 #'
@@ -70,6 +81,13 @@ set_label <- function(type, monitoring_id) {
   sprintf("%s (%s)", type, monitoring_id)
 }
 
+if(!is.date(data_sw_selected$date)) {
+  data_sw_selected$date <- as.Date(data_sw_selected$date)
+}
+
+if(!is.date(data_gw_selected$date)) {
+  data_gw_selected$date <- as.Date(data_gw_selected$date)
+}
 
 data_sw_selected <- structure(data_sw_selected,
                               type = "surface-water",
