@@ -20,7 +20,37 @@
 #' @return list with sim/observation data ("data") fit parameters ("paras"), goodness-of-fit values ("gof")
 #' traveltimes ("traveltimes") and special (min, max, turning) points ("points") as returned by \code{\link{get_predictions}}
 #' @export
+#' @examples
+#' load_temp <- function(base_name) {
+#'  kwb.heatsine::load_temperature_from_csv(
+#'  kwb.heatsine::extdata_file(base_name)
+#'  )
+#' }
 #'
+#' data_sw <- load_temp("temperature_surface-water_TEGsee-mikrosieb.csv")
+#' data_gw <- load_temp("temperature_groundwater_TEG343.csv")
+#'
+#' data_sw_selected <- kwb.heatsine::select_timeperiod(
+#'  data_sw,
+#'  date_start = "2015-10-10",
+#'  date_end = "2016-10-14"
+#' )
+#'
+#' data_gw_selected <- kwb.heatsine::select_timeperiod(
+#'  data_gw,
+#'  date_start = "2015-12-28",
+#'  date_end = "2016-12-26"
+#' )
+#'
+#' kwb.heatsine::run_optimisation(data_sw_selected = data_sw_selected,
+#' data_gw_selected = data_gw_selected,
+#' retardation_factor = 1.8,
+#' sw_monitoring_id = attr(data_sw_selected, "monitoring_id"),
+#' gw_monitoring_id = attr(data_gw_selected, "monitoring_id"),
+#' limits = c(100, 500),
+#' tolerance = 0.001,
+#' debug = FALSE)
+
 run_optimisation <- function (data_sw_selected,
                               data_gw_selected,
                               retardation_factor = 2,
