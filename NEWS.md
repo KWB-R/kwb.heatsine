@@ -1,8 +1,8 @@
 # [kwb.heatsine 0.1.4](https://github.com/KWB-R/kwb.heatsine/releases/tag/v0.1.4) <small>2020-10-09</small>
 
-* Add `run_optimisation` (new wrapper function for sinus optimisation). Use explained in article [Wrapper](../articles/wrapper.html)
+* Add `run_optimisation()` (new wrapper function for sinus optimisation). Use explained in article [Wrapper](../articles/wrapper.html)
 
-* `get_predictions`: add "residuals" as output of list element "data"
+* `get_predictions()`: add "residuals" as output of list element "data"
 
 # [kwb.heatsine 0.1.3](https://github.com/KWB-R/kwb.heatsine/releases/tag/v0.1.3) <small>2020-06-30</small>
 
