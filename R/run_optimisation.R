@@ -66,14 +66,23 @@ run_optimisation <- function (data_sw_selected,
                            ) {
 
 
+set_label <- function(type, monitoring_id) {
+  sprintf("%s (%s)", type, monitoring_id)
+}
+
+
 data_sw_selected <- structure(data_sw_selected,
                               type = "surface-water",
-                              monitoring_id = sw_monitoring_id)
+                              monitoring_id = sw_monitoring_id,
+                              label = set_label("surface-water", sw_monitoring_id)
+                              )
 
 
 data_gw_selected <- structure(data_gw_selected,
                               type = "groundwater",
-                              monitoring_id = gw_monitoring_id)
+                              monitoring_id = gw_monitoring_id,
+                              label = set_label("groundwater", gw_monitoring_id)
+                              )
 
 # Helper function to do the sinus optimisation
 do_sinus_optimisation <- function(temp_df) {
