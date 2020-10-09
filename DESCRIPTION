@@ -1,7 +1,7 @@
 Package: kwb.heatsine
 Title: R Package for Calculating Hydraulic Travel Times Based on
     Sinus Temperature Fitting
-Version: 0.1.4
+Version: 0.1.4.9000
 Authors@R: 
     c(person(given = "Michael",
              family = "Rustler",
