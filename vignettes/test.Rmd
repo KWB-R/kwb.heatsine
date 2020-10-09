@@ -226,15 +226,11 @@ write_to_csv <- function(df, file_base) {
   ))
 }
 
-get_residuals <- function(df) {
-  data.frame(residuals = df$simulated - df$observed)
-}
-
 write_to_csv(predictions$data, "sinus-fit_predictions")
 write_to_csv(predictions$paras, "sinus-fit_parameters")
 write_to_csv(predictions$gof, "sinus-fit_goodness-of-fit")
 write_to_csv(predictions$traveltimes, "sinus-fit_traveltimes")
-write_to_csv(get_residuals(predictions$data), "sinus-fit_residuals")
+write_to_csv(predictions$residuals, "sinus-fit_residuals")
 
 ## Export plots:
 

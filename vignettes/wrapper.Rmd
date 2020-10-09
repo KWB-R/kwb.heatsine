@@ -1,8 +1,8 @@
 ---
-title: "Tutorial"
+title: "Wrapper"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Tutorial}
+  %\VignetteIndexEntry{Wrapper}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -242,29 +242,11 @@ Sinus fit operation is performed by minimizing the RMSE error between observed
 and simulated temperature curves.
 
 ```{r}
-limits <- c(100, 500) # minimum/maximum period length
-tolerance <- 0.001 # the desired accuracy ()
-debug <- TRUE
-
-# Helper function to do the sinus optimisation
-do_sinus_optimisation <- function(temp_df) {
-  kwb.heatsine::optimise_sinus_variablePeriod(
-    temp_df = temp_df,
-    opt_limits = limits,
-    opt_tolerance = tolerance,
-    opt_debug = debug
-  )
-}
-
-sinusfit_sw <- do_sinus_optimisation(temp_df = data_sw_selected)
-sinusfit_gw <- do_sinus_optimisation(temp_df = data_gw_selected)
-
 # Generate data frame with simulated and observed values
-predictions <- kwb.heatsine::get_predictions(
-  sinusfit_sw = sinusfit_sw, 
-  sinusfit_gw = sinusfit_gw, 
-  retardation_factor = 1.8
-)
+predictions <- kwb.heatsine::run_optimisation(data_sw_selected,
+                                              data_gw_selected,
+                                              retardation_factor = 1.8
+                                              )
 ```
 
 ## Analyse
