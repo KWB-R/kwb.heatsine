@@ -10,7 +10,7 @@ Authors@R:
              comment = c(ORCID = "0000-0003-0647-7726")),
       person(given = "Hauke",
              family = "Sonnenberg",
-             role = c("ctb"),
+             role = "ctb",
              email = "hauke.sonnenberg@kompetenz-wasser.de",
              comment = c(ORCID = "0000-0001-9134-2871")),
       person(given = "Smart-Control",
@@ -24,6 +24,8 @@ Description: Requires daily temperature times series in a
 License: MIT + file LICENSE
 URL: https://github.com/KWB-R/kwb.heatsine
 BugReports: https://github.com/KWB-R/kwb.heatsine/issues
+Depends: 
+    R (>= 2.10)
 Imports: 
     dplyr (>= 1.0.2),
     forcats (>= 0.5.0),
@@ -46,13 +48,11 @@ Suggests:
     sessioninfo (>= 1.1.1),
     testthat (>= 2.3.2),
     withr (>= 2.3.0)
-Remotes: 
-    github::kwb-r/kwb.utils
 VignetteBuilder: 
     knitr
+Remotes: 
+    github::kwb-r/kwb.utils
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
-Depends: 
-    R (>= 2.10)
