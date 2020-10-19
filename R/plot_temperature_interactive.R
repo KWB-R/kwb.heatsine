@@ -4,7 +4,7 @@
 #' @return plot with interactive temperature data
 #' @export
 #' @examples
-#' path <- kwb.heatsine::extdata_file("temperature_groundwater_TEG343.csv")
+#' path <- kwb.heatsine::extdata_file("temperature_groundwater_Txxxx3.csv")
 #' gw_data <- kwb.heatsine::load_temperature_from_csv(path)
 #' kwb.heatsine::plot_temperature_interactive(gw_data)
 #'

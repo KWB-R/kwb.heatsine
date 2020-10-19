@@ -56,8 +56,8 @@ load_temp <- function(base_name) {
  )
 }
 
-data_sw <- load_temp("temperature_surface-water_TEGsee-mikrosieb.csv")
-data_gw <- load_temp("temperature_groundwater_TEG343.csv")
+data_sw <- load_temp("temperature_surface-water_Txxsxx-mxxxxsxxx.csv")
+data_gw <- load_temp("temperature_groundwater_Txxxx3.csv")
 
 data_sw_selected <- kwb.heatsine::select_timeperiod(
  data_sw,

@@ -9,7 +9,7 @@
 #' @export
 #'
 #' @examples
-#' path <- kwb.heatsine::extdata_file("temperature_groundwater_TEG343.csv")
+#' path <- kwb.heatsine::extdata_file("temperature_groundwater_Txxxx3.csv")
 #' gw_data <- kwb.heatsine::load_temperature_from_csv(path)
 #' gw_data_selected <- kwb.heatsine::select_timeperiod(gw_data,
 #' date_start = "2015-12-28", date_end = "2016-12-26")
