@@ -1,7 +1,7 @@
 [![Appveyor build Status](https://ci.appveyor.com/api/projects/status/d4yfx75uiaaamich/branch/master?svg=true)](https://ci.appveyor.com/project/KWB-R/kwb-heatsine/branch/master)
 [![Travis build Status](https://travis-ci.com/KWB-R/kwb.heatsine.svg?branch=master)](https://travis-ci.com/KWB-R/kwb.heatsine)
 [![codecov](https://codecov.io/github/KWB-R/kwb.heatsine/branch/master/graphs/badge.svg)](https://codecov.io/github/KWB-R/kwb.heatsine)
-[![Project Status](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![Project Status](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/kwb.heatsine)]()
 [![DOI](https://zenodo.org/badge/274332678.svg)](https://zenodo.org/badge/latestdoi/274332678)
 
