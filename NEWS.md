@@ -1,3 +1,12 @@
+# [kwb.heatsine 0.1.5](https://github.com/KWB-R/kwb.heatsine/releases/tag/v0.1.5) <small>2020-10-19</small>
+
+* Ran `usethis::use_latest_dependencies()`
+
+* Add project [Smart-Control](https://kompetenz-wasser.de/en/project/smart-control) 
+as `funder`.
+
+* Improved documentation
+
 # [kwb.heatsine 0.1.4](https://github.com/KWB-R/kwb.heatsine/releases/tag/v0.1.4) <small>2020-10-09</small>
 
 * Add `run_optimisation()` (new wrapper function for sinus optimisation). Use explained in article [Wrapper](../articles/wrapper.html)
