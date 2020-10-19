@@ -77,8 +77,8 @@ The R package includes the following temporal times series data for testing:
 list.files(kwb.heatsine::extdata_file())
 ```
 
-In this the example the files `temperature_surface-water_TEGsee-mikrosieb.csv` 
-and `temperature_groundwater_TEG343.csv` are used for testing the functionality
+In this the example the files `temperature_surface-water_Txxsxx-mxxxxsxxx.csv` 
+and `temperature_groundwater_Txxxx3.csv` are used for testing the functionality
 and imported by using the code below: 
 
 ```{r}
@@ -91,8 +91,8 @@ load_temp <- function(base_name) {
   )
 }
 
-data_sw <- load_temp("temperature_surface-water_TEGsee-mikrosieb.csv")
-data_gw <- load_temp("temperature_groundwater_TEG343.csv")
+data_sw <- load_temp("temperature_surface-water_Txxsxx-mxxxxsxxx.csv")
+data_gw <- load_temp("temperature_groundwater_Txxxx3.csv")
 ```
 
 ## Visualise

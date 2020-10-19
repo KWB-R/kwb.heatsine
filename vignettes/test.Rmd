@@ -1,8 +1,8 @@
 ---
-title: "Test (TEGbaum06)"
+title: "Test (Txxbxxxx6)"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Test (TEGbaum06)}
+  %\VignetteIndexEntry{Test (Txxbxxxx6)}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -77,8 +77,8 @@ The R package includes the following temporal times series data for testing:
 list.files(kwb.heatsine::extdata_file())
 ```
 
-In this the example the files `temperature_surface-water_TEGsee-mikrosieb.csv` 
-and `temperature_groundwater_TEG343.csv` are used for testing the functionality
+In this the example the files `temperature_surface-water_Txxsxx-mxxxxsxxx.csv` 
+and `temperature_groundwater_Txxbxxxx6.csv` are used for testing the functionality
 and imported by using the code below: 
 
 ```{r}
@@ -91,8 +91,8 @@ load_temp <- function(base_name) {
   )
 }
 
-data_sw <- load_temp("temperature_surface-water_TEGsee-mikrosieb.csv")
-data_gw <- load_temp("temperature_groundwater_TEGbaum06.csv")
+data_sw <- load_temp("temperature_surface-water_Txxsxx-mxxxxsxxx.csv")
+data_gw <- load_temp("temperature_groundwater_Txxbxxxx6.csv")
 ```
 
 ## Visualise
