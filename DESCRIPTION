@@ -1,7 +1,7 @@
 Package: kwb.heatsine
 Title: R Package for Calculating Hydraulic Travel Times Based on
     Sinus Temperature Fitting
-Version: 0.1.4
+Version: 0.1.5
 Authors@R: 
     c(person(given = "Michael",
              family = "Rustler",
@@ -10,9 +10,11 @@ Authors@R:
              comment = c(ORCID = "0000-0003-0647-7726")),
       person(given = "Hauke",
              family = "Sonnenberg",
-             role = c("ctb"),
+             role = "ctb",
              email = "hauke.sonnenberg@kompetenz-wasser.de",
              comment = c(ORCID = "0000-0001-9134-2871")),
+      person(given = "Smart-Control",
+             role = "fnd"),
       person(given = "Kompetenzzentrum Wasser Berlin gGmbH (KWB)",
              role = "cph"))
 Description: Requires daily temperature times series in a
@@ -22,32 +24,34 @@ Description: Requires daily temperature times series in a
 License: MIT + file LICENSE
 URL: https://github.com/KWB-R/kwb.heatsine
 BugReports: https://github.com/KWB-R/kwb.heatsine/issues
+Depends: 
+    R (>= 2.10)
 Imports: 
-    dplyr,
-    forcats,
-    ggplot2,
-    hydroGOF,
-    kwb.utils,
-    lubridate,
-    magrittr,
-    plotly,
-    readr,
-    rlang,
-    stringr,
-    tibble,
-    tidyr
+    dplyr (>= 1.0.2),
+    forcats (>= 0.5.0),
+    ggplot2 (>= 3.3.2),
+    hydroGOF (>= 0.4.0),
+    kwb.utils (>= 0.7.0),
+    lubridate (>= 1.7.9),
+    magrittr (>= 1.5),
+    plotly (>= 4.9.2.1),
+    readr (>= 1.4.0),
+    rlang (>= 0.4.8),
+    stringr (>= 1.4.0),
+    tibble (>= 3.0.4),
+    tidyr (>= 1.1.2)
 Suggests: 
-    covr,
-    htmlwidgets,
-    knitr,
-    rmarkdown,
-    sessioninfo,
-    testthat,
-    withr
-Remotes: 
-    github::kwb-r/kwb.utils
+    covr (>= 3.5.1),
+    htmlwidgets (>= 1.5.2),
+    knitr (>= 1.30),
+    rmarkdown (>= 2.4),
+    sessioninfo (>= 1.1.1),
+    testthat (>= 2.3.2),
+    withr (>= 2.3.0)
 VignetteBuilder: 
     knitr
+Remotes: 
+    github::kwb-r/kwb.utils
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

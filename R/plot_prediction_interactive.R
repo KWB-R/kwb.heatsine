@@ -80,7 +80,9 @@ plot_prediction_interactive <- function(predictions)
   }
 
   g1 <- predictions$data %>%
-    dplyr::select(-.data$type, -.data$monitoring_id) %>%
+    dplyr::select(-.data$type,
+                  -.data$monitoring_id,
+                  -.data$residuals) %>%
     tidyr::gather(
       key = "temperature",
       value = "value",

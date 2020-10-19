@@ -29,11 +29,11 @@ for selected time period}
 \item{retardation_factor}{hydraulic retardation factor (default: 2)}
 
 \item{sw_monitoring_id}{optional label for surface water monitoring id (default: "surface-water monitoring point"
-or attr(data_sw_selected, "monitoring_id") if data imported with  \code{\link{load_temperature_from_csv}}, otherwise
+or attr(data_sw_selected, "monitoring_id") if data imported with  \code{\link{load_temperature_from_csv}}), otherwise
 can be any user-defined character string to be used as label for the monitoring point}
 
 \item{gw_monitoring_id}{optional label for groundwater monitoring id (default: "surface-water monitoring point"
-or attr(data_sw_selected, "monitoring_id") if data imported with  \code{\link{load_temperature_from_csv}}, otherwise
+or attr(data_sw_selected, "monitoring_id") if data imported with  \code{\link{load_temperature_from_csv}}), otherwise
 can be any user-defined character string to be used as label for the monitoring point}
 
 \item{limits}{minimum/maximum period length for sinus optimisation in days (default: c(100, 500))}
@@ -48,4 +48,35 @@ traveltimes ("traveltimes") and special (min, max, turning) points ("points") as
 }
 \description{
 Wrapper function for sinus optimisation
+}
+\examples{
+load_temp <- function(base_name) {
+ kwb.heatsine::load_temperature_from_csv(
+ kwb.heatsine::extdata_file(base_name)
+ )
+}
+
+data_sw <- load_temp("temperature_surface-water_Txxsxx-mxxxxsxxx.csv")
+data_gw <- load_temp("temperature_groundwater_Txxxx3.csv")
+
+data_sw_selected <- kwb.heatsine::select_timeperiod(
+ data_sw,
+ date_start = "2015-10-10",
+ date_end = "2016-10-14"
+)
+
+data_gw_selected <- kwb.heatsine::select_timeperiod(
+ data_gw,
+ date_start = "2015-12-28",
+ date_end = "2016-12-26"
+)
+
+kwb.heatsine::run_optimisation(data_sw_selected = data_sw_selected,
+data_gw_selected = data_gw_selected,
+retardation_factor = 1.8,
+sw_monitoring_id = attr(data_sw_selected, "monitoring_id"),
+gw_monitoring_id = attr(data_gw_selected, "monitoring_id"),
+limits = c(100, 500),
+tolerance = 0.001,
+debug = FALSE)
 }

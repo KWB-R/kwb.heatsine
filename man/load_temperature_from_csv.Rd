@@ -16,7 +16,7 @@ tibble with temperature data and columns "date" and "value"
 Load Temperature Data From CSV
 }
 \examples{
-path <- kwb.heatsine::extdata_file("temperature_groundwater_TEG343.csv")
+path <- kwb.heatsine::extdata_file("temperature_groundwater_Txxxx3.csv")
 gw_data <- kwb.heatsine::load_temperature_from_csv(path)
 gw_data
 

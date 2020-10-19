@@ -7,7 +7,7 @@
 #' @importFrom kwb.utils asNoFactorDataFrame safePath
 #' @importFrom stringr str_split_fixed
 #' @examples
-#' path <- kwb.heatsine::extdata_file("temperature_groundwater_TEG343.csv")
+#' path <- kwb.heatsine::extdata_file("temperature_groundwater_Txxxx3.csv")
 #' gw_data <- kwb.heatsine::load_temperature_from_csv(path)
 #' gw_data
 #'

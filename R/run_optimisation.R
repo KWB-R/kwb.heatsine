@@ -1,3 +1,14 @@
+#' Helper function: check if Date
+#'
+#' @param x object to be checked
+#'
+#' @return TRUE (if Date) FALSE (if not Date)
+#' @keywords internal
+#' @noRd
+#'
+is.date <- function(x) {
+  inherits(x, 'Date')
+}
 
 #' Wrapper function for sinus optimisation
 #'
@@ -20,7 +31,37 @@
 #' @return list with sim/observation data ("data") fit parameters ("paras"), goodness-of-fit values ("gof")
 #' traveltimes ("traveltimes") and special (min, max, turning) points ("points") as returned by \code{\link{get_predictions}}
 #' @export
+#' @examples
+#' load_temp <- function(base_name) {
+#'  kwb.heatsine::load_temperature_from_csv(
+#'  kwb.heatsine::extdata_file(base_name)
+#'  )
+#' }
 #'
+#' data_sw <- load_temp("temperature_surface-water_Txxsxx-mxxxxsxxx.csv")
+#' data_gw <- load_temp("temperature_groundwater_Txxxx3.csv")
+#'
+#' data_sw_selected <- kwb.heatsine::select_timeperiod(
+#'  data_sw,
+#'  date_start = "2015-10-10",
+#'  date_end = "2016-10-14"
+#' )
+#'
+#' data_gw_selected <- kwb.heatsine::select_timeperiod(
+#'  data_gw,
+#'  date_start = "2015-12-28",
+#'  date_end = "2016-12-26"
+#' )
+#'
+#' kwb.heatsine::run_optimisation(data_sw_selected = data_sw_selected,
+#' data_gw_selected = data_gw_selected,
+#' retardation_factor = 1.8,
+#' sw_monitoring_id = attr(data_sw_selected, "monitoring_id"),
+#' gw_monitoring_id = attr(data_gw_selected, "monitoring_id"),
+#' limits = c(100, 500),
+#' tolerance = 0.001,
+#' debug = FALSE)
+
 run_optimisation <- function (data_sw_selected,
                               data_gw_selected,
                               retardation_factor = 2,
@@ -36,14 +77,30 @@ run_optimisation <- function (data_sw_selected,
                            ) {
 
 
+set_label <- function(type, monitoring_id) {
+  sprintf("%s (%s)", type, monitoring_id)
+}
+
+if(!is.date(data_sw_selected$date)) {
+  data_sw_selected$date <- as.Date(data_sw_selected$date)
+}
+
+if(!is.date(data_gw_selected$date)) {
+  data_gw_selected$date <- as.Date(data_gw_selected$date)
+}
+
 data_sw_selected <- structure(data_sw_selected,
                               type = "surface-water",
-                              monitoring_id = sw_monitoring_id)
+                              monitoring_id = sw_monitoring_id,
+                              label = set_label("surface-water", sw_monitoring_id)
+                              )
 
 
 data_gw_selected <- structure(data_gw_selected,
                               type = "groundwater",
-                              monitoring_id = gw_monitoring_id)
+                              monitoring_id = gw_monitoring_id,
+                              label = set_label("groundwater", gw_monitoring_id)
+                              )
 
 # Helper function to do the sinus optimisation
 do_sinus_optimisation <- function(temp_df) {
